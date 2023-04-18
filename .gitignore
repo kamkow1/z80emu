@@ -1,1 +1,4 @@
 venv
+out.bin
+out.lst
+__pycache__
