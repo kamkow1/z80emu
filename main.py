@@ -2,6 +2,7 @@
 
 import sys
 import z80_parser
+import z80_vm
 
 if len(sys.argv) < 2:
     print("Error: please provide an input file.\n",
@@ -9,5 +10,7 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 with open(sys.argv[1], "rb") as f:
-    z80_parser.parse(f.read())
+    instrs = z80_parser.parse(f.read())
+    vm = z80_vm.VM()
+    vm.exec(instrs)
 
