@@ -3,13 +3,22 @@
   .lf out.lst
   .sf out.sym
 
+cmp_22:
+  nop
+
+esia:
+  nop
+
 main:
   nop
   nop
   nop
 
-label:
-  nop
-  nop
-  jp label
+  ld a, 22
+  cp 22
+  jp z, main
+
+  ; ld a, 22
+  ; cp 22
+  ; jp nz, cmp_22
 
