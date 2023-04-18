@@ -67,6 +67,9 @@ class VM:
             elif a >= result:
                 self.registers["P/V"].value = True
 
+    def instr_ld(self, reg_name, value):
+        self.registers[reg_name].value = value
+
     def exec(self, instrs):
         self.setup_flags_and_pc()
 
@@ -96,8 +99,16 @@ class VM:
                 self.instr_cp(self.registers["B"].value)
                 self.registers["PC"].value += 1
             elif curr_instr.numeric_opcode == z80_parser.Opcode.LD_A:
-                value = curr_instr.operands[0]
-                self.registers["A"].value = value
+                self.instr_ld("A", curr_instr.operands[0])
+                self.registers["PC"].value += 1
+            elif curr_instr.numeric_opcode == z80_parser.Opcode.LD_B:
+                self.instr_ld("B", curr_instr.operands[0])
+                self.registers["PC"].value += 1
+            elif curr_instr.numeric_opcode == z80_parser.Opcode.LD_D:
+                self.instr_ld("D", curr_instr.operands[0])
+                self.registers["PC"].value += 1
+            elif curr_instr.numeric_opcode == z80_parser.Opcode.LD_H:
+                self.instr_ld("H", curr_instr.operands[0])
                 self.registers["PC"].value += 1
             else:
                 print("Error: got parsed, but unhandled instruction",

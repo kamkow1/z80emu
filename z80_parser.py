@@ -13,6 +13,9 @@ class Opcode:
     CP_B = 0xB8
 
     LD_A = 0x3E
+    LD_B = 0x06
+    LD_D = 0x16
+    LD_H = 0x26
 
 
 class Instr:
@@ -70,6 +73,21 @@ def parse(source):
             value = source[curr_byte]
             curr_byte += 1
             instrs.append(Instr("LD A", Opcode.LD_A, (value,)))
+        elif source[curr_byte] == Opcode.LD_B:
+            curr_byte += 1
+            value = source[curr_byte]
+            curr_byte += 1
+            instrs.append(Instr("LD B", Opcode.LD_B, (value,)))
+        elif source[curr_byte] == Opcode.LD_D:
+            curr_byte += 1
+            value = source[curr_byte]
+            curr_byte += 1
+            instrs.append(Instr("LD D", Opcode.LD_D, (value,)))
+        elif source[curr_byte] == Opcode.LD_H:
+            curr_byte += 1
+            value = source[curr_byte]
+            curr_byte += 1
+            instrs.append(Instr("LD H", Opcode.LD_H, (value,)))
         else:
             print("Error: got unknown/unimplemented opcode",
                   f"`{hex(source[curr_byte])}`\n",
