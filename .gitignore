@@ -1,4 +1,5 @@
 venv
 out.bin
 out.lst
+out.sym
 __pycache__

@@ -7,8 +7,9 @@ class Opcode:
 
 
 class Instr:
-    def __init__(self, mnemonic, operands):
+    def __init__(self, mnemonic, numeric_opcode, operands):
         self.mnemonic = mnemonic
+        self.numeric_opcode = numeric_opcode
         self.operands = operands
 
 
@@ -19,12 +20,12 @@ def parse(source):
     while curr_byte < len(source):
         if source[curr_byte] == Opcode.NOP:
             curr_byte += 1
-            instrs.append(Instr("NOP", ()))
+            instrs.append(Instr("NOP", Opcode.NOP, ()))
         elif source[curr_byte] == Opcode.JP_XX:
             curr_byte += 1
             addr = source[curr_byte]
             curr_byte += 1
-            instrs.append(Instr("JP", (addr,)))
+            instrs.append(Instr("JP", Opcode.JP_XX, (addr,)))
         else:
             print("Error: got unknown/unimplemented opcode",
                   f"`{hex(source[curr_byte])}`\n",

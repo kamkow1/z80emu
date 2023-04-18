@@ -1,4 +1,5 @@
 import sys
+import z80_parser
 
 
 class Z80Register:
@@ -27,6 +28,13 @@ class VM:
         self.registers["PC"] = Z80Register("PC", "Program counter")
 
     def exec(self, instrs):
-        print("TODO: VM.exec()")
-        sys.exit(1)
+        self.registers["PC"] = 0
+
+        while self.registers["PC"] < len(instrs):
+            curr_instr = instrs[self.registers["PC"]]
+
+            if curr_instr.numeric_opcode == z80_parser.Opcode.NOP:
+                self.registers["PC"] += 1
+            elif curr_instr.numeric_opcode == z80_parser.Opcode.JP_XX:
+                self.registers["PC"] = curr_instr.operands[0]
 
