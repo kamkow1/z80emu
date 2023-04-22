@@ -31,6 +31,28 @@ class VM:
         high_byte = self.ram[self.registers["PC"].value]
         self.registers["PC"].value = high_byte << 8 | low_byte
 
+    def handler_cp_n(self, opcode):
+        a = self.registers["A"].value
+        self.increment_pc()
+        result = a - self.ram[self.registers["PC"].value]
+        print(result)
+
+        if a == result:
+            self.registers["Z"].value = True
+        else:
+            self.registers["Z"].value = False
+
+        if a < result:
+            if result >= 0:
+                # unsigned
+                self.registers["C"].value = True
+            else:
+                # signed
+                if self.registers["S"].value == self.registers["P/V"]:
+                    self.registers["S"].value = True
+
+        self.dump_registers(self.registers["PC"].value)
+
     def handler_ld_r8_n(self, opcode):
         reg = (opcode >> 3) & 7
         if reg not in BIN_TO_STR_REGS:
@@ -89,6 +111,7 @@ class VM:
                 0b00100001: self.handler_ld_r16_n_n,    # ld hl, n, n
                 0b00000001: self.handler_ld_r16_n_n,    # ld bc, n, n
                 0b11000011: self.handler_jp_n_n,
+                0b11111110: self.handler_cp_n,
                 0b00000000: self.handler_nop}
 
     def setup_flags_and_pc(self):
