@@ -31,6 +31,24 @@ class VM:
         high_byte = self.ram[self.registers["PC"].value]
         self.registers["PC"].value = high_byte << 8 | low_byte
 
+    def hanlder_jp_nz_n_n(self, opcode):
+        if not self.registers["Z"].value:
+            low_byte = self.ram[self.registers["PC"].value]
+            self.increment_pc()
+            high_byte = self.ram[self.registers["PC"].value]
+            self.registers["PC"].value = high_byte << 8 | low_byte
+        else:
+            self.increment_pc()
+
+    def hanlder_jp_z_n_n(self, opcode):
+        if self.registers["Z"].value:
+            low_byte = self.ram[self.registers["PC"].value]
+            self.increment_pc()
+            high_byte = self.ram[self.registers["PC"].value]
+            self.registers["PC"].value = high_byte << 8 | low_byte
+        else:
+            self.increment_pc()
+
     def handler_cp_n(self, opcode):
         a = self.registers["A"].value
         self.increment_pc()
@@ -111,6 +129,8 @@ class VM:
                 0b00100001: self.handler_ld_r16_n_n,    # ld hl, n, n
                 0b00000001: self.handler_ld_r16_n_n,    # ld bc, n, n
                 0b11000011: self.handler_jp_n_n,
+                0b11001010: self.hanlder_jp_z_n_n,
+                0b11000010: self.hanlder_jp_nz_n_n,
                 0b11111110: self.handler_cp_n,
                 0b00000000: self.handler_nop}
 

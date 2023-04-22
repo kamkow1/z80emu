@@ -16,6 +16,6 @@ main:
 
   ld a, 22
   cp 22
-  ; jp z, main
+  jp nz, main
 
 
