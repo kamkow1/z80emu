@@ -106,41 +106,6 @@ class VM:
             print(f"{key} = {reg.value}")
         print("-------------------------------------")
 
-    def instr_cp(self, value):
-        a = self.registers["A"].value
-        result = value - a
-        if a == result:
-            self.registers["Z"].value = True
-        else:
-            self.registers["Z"].value = False
-
-        if result < 0:
-            # unsigned
-            if a < result:
-                self.registers["C"].value = True
-            elif a >= result:
-                self.registers["C"].value = False
-        else:
-            # signed
-            self.registers["S"].value = True
-            if a < result:
-                self.registers["P/V"].value = False
-            elif a >= result:
-                self.registers["P/V"].value = True
-
-    def instr_ld(self, reg_name, value):
-        self.registers[reg_name].value = value
-
-    def instr_jp(self):
-        lower = self.fetch()
-        self.increment()
-        upper = self.fetch()
-        self.increment()
-        self.registers["PC"].value = upper << 8 | lower
-
-    def fetch(self):
-        return self.source[self.registers["PC"].value]
-
     def exec(self):
         self.setup_flags_and_pc()
 
