@@ -1,5 +1,5 @@
 venv
-out.bin
-out.lst
-out.sym
+*.bin
+*.lst
+*.sym
 __pycache__

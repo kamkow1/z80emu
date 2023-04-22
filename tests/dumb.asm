@@ -15,10 +15,7 @@ main:
   nop
 
   ld a, 22
-  cp 22
-  jp z, main
-
-  ; ld a, 22
   ; cp 22
-  ; jp nz, cmp_22
+  ; jp z, main
+
 

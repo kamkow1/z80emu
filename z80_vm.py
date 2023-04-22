@@ -1,5 +1,4 @@
 import sys
-import z80_parser
 
 
 class Z80Register:
@@ -9,25 +8,89 @@ class Z80Register:
         self.desc = desc
 
 
+BIN_TO_STR_REGS = {
+        0b111: "A",
+        0b000: "B",
+        0b001: "C",
+        0b010: "D",
+        0b011: "E",
+        0b100: "H",
+        0b101: "L"}
+
+
 class VM:
-    def __init__(self):
-        self.registers = {}
-        self.registers["A"] = Z80Register("A", "Accumulator")
-        self.registers["B"] = Z80Register("B", "Accumulator")
-        self.registers["D"] = Z80Register("D", "Accumulator")
-        self.registers["H"] = Z80Register("H", "Accumulator")
-        self.registers["C"] = Z80Register("C", "Carry flag")
-        self.registers["Z"] = Z80Register("Z", "Zero flag")
-        self.registers["S"] = Z80Register("S", "Sign flag")
-        self.registers["N"] = Z80Register("N", "Add/Sub flag")
-        self.registers["P/V"] = Z80Register("P/V", "Parity/overflow flag")
-        self.registers["H"] = Z80Register("H", "Half carry flag")
-        self.registers["IX"] = Z80Register("IX", "Index register")
-        self.registers["IY"] = Z80Register("IY", "Index register")
-        self.registers["I"] = Z80Register("I", "Interrupt vector")
-        self.registers["R"] = Z80Register("R", "Memory refresh")
-        self.registers["SP"] = Z80Register("SP", "Stack pointer")
-        self.registers["PC"] = Z80Register("PC", "Program counter")
+    def increment_pc(self):
+        self.registers["PC"].value += 1
+
+    def handler_nop(self, opcode):
+        pass
+
+    def handler_jp_n_n(self, opcode):
+        low_byte = self.ram[self.registers["PC"].value]
+        self.increment_pc()
+        high_byte = self.ram[self.registers["PC"].value]
+        self.registers["PC"].value = high_byte << 8 | low_byte
+
+    def handler_ld_r8_n(self, opcode):
+        reg = (opcode >> 3) & 7
+        if reg not in BIN_TO_STR_REGS:
+            print(f"Error: encoutnered an unknown register `{hex(reg)}`")
+            sys.exit(1)
+
+        data = self.ram[self.registers["PC"].value]
+        self.increment_pc()
+        self.registers[BIN_TO_STR_REGS[reg]].value = data
+
+    def handler_ld_r16_n_n(self, opcode):
+        reg = (opcode >> 4) & 3
+        low_byte = self.ram[self.registers["PC"].value]
+        self.increment_pc()
+        high_byte = self.ram[self.registers["PC"].value]
+        self.increment_pc()
+
+        if reg == 0:
+            # BC
+            self.registers["B"].value = high_byte
+            self.registers["C"].value = low_byte
+        elif reg == 2:
+            # HL
+            self.registers["H"].value = high_byte
+            self.registers["L"].value = low_byte
+
+    def __init__(self, source):
+        # init ram
+        self.ram = [0] * 0xFFFF
+        for i, byte in enumerate(source):
+            self.ram[i] = byte
+
+        # cycle counter
+        self.tick = 0
+
+        self.registers = {
+            "A": Z80Register("A", "Accumulator"),
+        	"B": Z80Register("B", "Accumulator"),
+        	"D": Z80Register("D", "Accumulator"),
+        	"H": Z80Register("H", "Accumulator"),
+        	"C": Z80Register("C", "Carry flag"),
+        	"Z": Z80Register("Z", "Zero flag"),
+        	"S": Z80Register("S", "Sign flag"),
+        	"N": Z80Register("N", "Add/Sub flag"),
+        	"L": Z80Register("L", "flag"),
+        	"P/V": Z80Register("P/V", "Parity/overflow flag"),
+        	"H": Z80Register("H", "Half carry flag"),
+        	"IX": Z80Register("IX", "Index register"),
+        	"IY": Z80Register("IY", "Index register"),
+        	"I": Z80Register("I", "Interrupt vector"),
+        	"R": Z80Register("R", "Memory refresh"),
+        	"SP": Z80Register("SP", "Stack pointer"),
+        	"PC": Z80Register("PC", "Program counter")}
+
+        self.opcode_handlers = {
+                0b00111110: self.handler_ld_r8_n,       # ld a, n
+                0b00100001: self.handler_ld_r16_n_n,    # ld hl, n, n
+                0b00000001: self.handler_ld_r16_n_n,    # ld bc, n, n
+                0b11000011: self.handler_jp_n_n,
+                0b00000000: self.handler_nop}
 
     def setup_flags_and_pc(self):
         self.registers["PC"].value = 0
@@ -36,7 +99,6 @@ class VM:
         self.registers["S"].value = False
         self.registers["N"].value = False
         self.registers["P/V"].value = False
-        self.registers["H"].value = False
 
     def dump_registers(self, iter):
         print(f"REGISTER STATE (ITERATION {iter}):")
@@ -70,48 +132,22 @@ class VM:
     def instr_ld(self, reg_name, value):
         self.registers[reg_name].value = value
 
-    def exec(self, instrs):
+    def instr_jp(self):
+        lower = self.fetch()
+        self.increment()
+        upper = self.fetch()
+        self.increment()
+        self.registers["PC"].value = upper << 8 | lower
+
+    def fetch(self):
+        return self.source[self.registers["PC"].value]
+
+    def exec(self):
         self.setup_flags_and_pc()
 
-        while self.registers["PC"].value < len(instrs):
-            curr_instr = instrs[self.registers["PC"].value]
-
-            if curr_instr.numeric_opcode == z80_parser.Opcode.NOP:
-                self.registers["PC"].value += 1
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.JP:
-                self.registers["PC"].value = curr_instr.operands[0]
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.JP_Z:
-                if self.registers["Z"].value:
-                    print(self.registers["Z"].value)
-                    self.registers["PC"].value = curr_instr.operands[0]
-                else:
-                    self.registers["PC"].value += 1
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.JP_NZ:
-                if not self.registers["Z"].value:
-                    self.registers["PC"].value = curr_instr.operands[0]
-                else:
-                    self.registers["PC"].value += 1
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.CP:
-                value = curr_instr.operands[0]
-                self.instr_cp(value)
-                self.registers["PC"].value += 1
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.CP_B:
-                self.instr_cp(self.registers["B"].value)
-                self.registers["PC"].value += 1
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.LD_A:
-                self.instr_ld("A", curr_instr.operands[0])
-                self.registers["PC"].value += 1
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.LD_B:
-                self.instr_ld("B", curr_instr.operands[0])
-                self.registers["PC"].value += 1
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.LD_D:
-                self.instr_ld("D", curr_instr.operands[0])
-                self.registers["PC"].value += 1
-            elif curr_instr.numeric_opcode == z80_parser.Opcode.LD_H:
-                self.instr_ld("H", curr_instr.operands[0])
-                self.registers["PC"].value += 1
-            else:
-                print("Error: got parsed, but unhandled instruction",
-                      f"`{instrs[self.registers['PC']]}`")
-                sys.exit(1)
+        while self.tick < 100:
+            self.tick += 1
+            opcode = self.ram[self.registers["PC"].value]
+            self.increment_pc()
+            self.opcode_handlers[opcode](opcode)
 
