@@ -73,17 +73,16 @@ class VM:
                 "H": Z80Register("H", "Accumulator"),
                 "C": Z80Register("C", "Carry flag"),
                 "Z": Z80Register("Z", "Zero flag"),
-            	"S": Z80Register("S", "Sign flag"),
-            	"N": Z80Register("N", "Add/Sub flag"),
-            	"L": Z80Register("L", "flag"),
-            	"P/V": Z80Register("P/V", "Parity/overflow flag"),
-            	"H": Z80Register("H", "Half carry flag"),
-            	"IX": Z80Register("IX", "Index register"),
-            	"IY": Z80Register("IY", "Index register"),
-            	"I": Z80Register("I", "Interrupt vector"),
-        	    "R": Z80Register("R", "Memory refresh"),
-            	"SP": Z80Register("SP", "Stack pointer"),
-            	"PC": Z80Register("PC", "Program counter")}
+                "S": Z80Register("S", "Sign flag"),
+                "N": Z80Register("N", "Add/Sub flag"),
+                "L": Z80Register("L", "flag"),
+                "P/V": Z80Register("P/V", "Parity/overflow flag"),
+                "IX": Z80Register("IX", "Index register"),
+                "IY": Z80Register("IY", "Index register"),
+                "I": Z80Register("I", "Interrupt vector"),
+                "R": Z80Register("R", "Memory refresh"),
+                "SP": Z80Register("SP", "Stack pointer"),
+                "PC": Z80Register("PC", "Program counter")}
 
         self.opcode_handlers = {
                 0b00111110: self.handler_ld_r8_n,       # ld a, n
