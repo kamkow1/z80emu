@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
-import z80_vm
+import vm
 
 if len(sys.argv) < 2:
     print("Error: please provide an input file.\n",
@@ -9,6 +9,6 @@ if len(sys.argv) < 2:
     sys.exit(1)
 
 with open(sys.argv[1], "rb") as f:
-    vm = z80_vm.VM(f.read())
+    vm = vm.VM(f.read())
     vm.exec()
 

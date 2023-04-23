@@ -3,3 +3,4 @@ venv
 *.lst
 *.sym
 __pycache__
+vm/__pycache__
