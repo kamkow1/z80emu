@@ -8,7 +8,7 @@ class Z80Register:
 class VM:
     from ._nop import handler_nop
     from ._cp import handler_cp_n
-    from ._ret import handler_ret
+    from ._halt import handler_halt
     from ._jp import (
         handler_jp_n_n,
         handler_jp_z_n_n,
@@ -18,7 +18,7 @@ class VM:
         handler_ld_r8_n,
         handler_ld_r16_n_n
     )
-    from ._call import (
+    from ._stack import (
         handler_call_n_n,
         handler_call_z_n_n,
         handler_call_nz_n_n,
@@ -28,10 +28,9 @@ class VM:
         handler_call_pe_n_n,
         handler_call_p_n_n,
         handler_call_m_n_n,
-    )
-    from ._stack_helpers import (
-        stack_pop,
-        stack_push
+        handler_ret,
+        handler_push_r16,
+        handler_pop_r16
     )
     from ._vmutils import (
         dump_registers,
@@ -56,6 +55,9 @@ class VM:
         # cycle counter
         self.tick = 0
 
+        # halt
+        self.halt = False
+
         self.registers = {
                 "A": Z80Register("A", "Accumulator"),
                 "B": Z80Register("B", "Accumulator"),
@@ -75,15 +77,18 @@ class VM:
                 "PC": Z80Register("PC", "Program counter")}
 
         self.opcode_handlers = {
+                # -- Ld --
                 0x3E: self.handler_ld_r8_n,       # ld a, n
                 0x21: self.handler_ld_r16_n_n,    # ld hl, n, n
                 0x01: self.handler_ld_r16_n_n,    # ld bc, n, n
                 0x31: self.handler_ld_r16_n_n,    # ld sp, n, n
 
+                # -- Jp --
                 0xC3: self.handler_jp_n_n,
                 0xCA: self.handler_jp_z_n_n,
                 0xC2: self.handler_jp_nz_n_n,
 
+                # -- Call --
                 0xCD: self.handler_call_n_n,
                 0xCC: self.handler_call_z_n_n,
                 0xC4: self.handler_call_nz_n_n,
@@ -94,9 +99,29 @@ class VM:
                 0xF4: self.handler_call_p_n_n,
                 0xFC: self.handler_call_m_n_n,
 
-                0xFE: self.handler_cp_n,
+                # -- Ret --
                 0xC9: self.handler_ret,
-                0x00: self.handler_nop}
+
+                # -- Push --
+                0xC5: self.handler_push_r16,
+                0xD5: self.handler_push_r16,
+                0xE5: self.handler_push_r16,
+                0xF5: self.handler_push_r16,
+
+                # -- Pop --
+                0xC1: self.handler_pop_r16,
+                0xD1: self.handler_pop_r16,
+                0xE1: self.handler_pop_r16,
+                0xF1: self.handler_pop_r16,
+
+                # -- Cp --
+                0xFE: self.handler_cp_n,
+
+                # -- Nop --
+                0x00: self.handler_nop,
+
+                # -- Halt --
+                0x76: self.handler_halt}
 
     def increment_pc(self):
         self.registers["PC"].value += 1
@@ -104,8 +129,14 @@ class VM:
     def exec(self):
         self.setup_flags_and_pc()
 
-        while self.tick < len(self.source):
+        while True:
             self.tick += 1
+
+            if self.halt:
+                if self.tick % 10000000 == 0:
+                    print(f"Info: CPU Halted, self.tick = {self.tick}")
+                continue
+
             opcode = self.ram[self.registers["PC"].value]
             print(f"OPCODE: {hex(opcode)}")
             self.increment_pc()

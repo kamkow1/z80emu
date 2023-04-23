@@ -20,11 +20,12 @@ def handler_ld_r16_n_n(self, opcode):
     self.increment_pc()
 
     if reg == 0x0:
-        # BC
         self.registers["B"].value = high_byte
         self.registers["C"].value = low_byte
+    if reg == 0x1:
+        self.registers["D"].value = high_byte
+        self.registers["E"].value = low_byte
     elif reg == 0x2:
-        # HL
         self.registers["H"].value = high_byte
         self.registers["L"].value = low_byte
     elif reg == 0x3:

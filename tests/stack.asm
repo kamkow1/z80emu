@@ -6,7 +6,10 @@
 
 main:
   ld sp, 0x1234
+  ld hl, 44
   call some_label
+  nop
+  halt
 
 some_other_label:
   nop
