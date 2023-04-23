@@ -7,13 +7,36 @@ class Z80Register:
 
 class VM:
     from ._nop import handler_nop
-    from ._jp import handler_jp_n_n, handler_jp_z_n_n, handler_jp_nz_n_n
-    from ._ld import handler_ld_r8_n, handler_ld_r16_n_n
     from ._cp import handler_cp_n
-    from ._call import handler_call_n_n
     from ._ret import handler_ret
-    from ._stack_helpers import stack_pop, stack_push
-    from ._vmutils import dump_registers, setup_flags_and_pc
+    from ._jp import (
+        handler_jp_n_n,
+        handler_jp_z_n_n,
+        handler_jp_nz_n_n
+    )
+    from ._ld import (
+        handler_ld_r8_n,
+        handler_ld_r16_n_n
+    )
+    from ._call import (
+        handler_call_n_n,
+        handler_call_z_n_n,
+        handler_call_nz_n_n,
+        handler_call_nc_n_n,
+        handler_call_c_n_n,
+        handler_call_po_n_n,
+        handler_call_pe_n_n,
+        handler_call_p_n_n,
+        handler_call_m_n_n,
+    )
+    from ._stack_helpers import (
+        stack_pop,
+        stack_push
+    )
+    from ._vmutils import (
+        dump_registers,
+        setup_flags_and_pc
+    )
 
     bin_to_str_regs = {
             0b111: "A",
@@ -56,11 +79,22 @@ class VM:
                 0x21: self.handler_ld_r16_n_n,    # ld hl, n, n
                 0x01: self.handler_ld_r16_n_n,    # ld bc, n, n
                 0x31: self.handler_ld_r16_n_n,    # ld sp, n, n
+
                 0xC3: self.handler_jp_n_n,
                 0xCA: self.handler_jp_z_n_n,
                 0xC2: self.handler_jp_nz_n_n,
-                0xFE: self.handler_cp_n,
+
                 0xCD: self.handler_call_n_n,
+                0xCC: self.handler_call_z_n_n,
+                0xC4: self.handler_call_nz_n_n,
+                0xD4: self.handler_call_nc_n_n,
+                0xDC: self.handler_call_c_n_n,
+                0xE4: self.handler_call_po_n_n,
+                0xEC: self.handler_call_pe_n_n,
+                0xF4: self.handler_call_p_n_n,
+                0xFC: self.handler_call_m_n_n,
+
+                0xFE: self.handler_cp_n,
                 0xC9: self.handler_ret,
                 0x00: self.handler_nop}
 
