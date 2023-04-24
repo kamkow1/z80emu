@@ -22,7 +22,7 @@ def handler_ld_r16_n_n(self, opcode):
     if reg == 0:
         self.registers["B"].value = high_byte
         self.registers["C"].value = low_byte
-    if reg == 1:
+    elif reg == 1:
         self.registers["D"].value = high_byte
         self.registers["E"].value = low_byte
     elif reg == 2:
