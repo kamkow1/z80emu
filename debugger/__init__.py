@@ -72,18 +72,15 @@ class Debugger:
                     sys.exit(0)
                 imgui.end_menu()
 
-            btn_play_clicked = imgui.button("Run program")
-            if btn_play_clicked:
+            if imgui.button("Run"):
                 self.timer_start = default_timer()
                 self.vm_playing = True
                 self.vm_suspended = False
 
-            btn_suspend_clicked = imgui.button("Suspend execution")
-            if btn_suspend_clicked:
+            if imgui.button("Suspend"):
                 self.vm_suspended = True
 
-            btn_reset_clicked = imgui.button("Reset")
-            if btn_reset_clicked:
+            if imgui.button("Reset"):
                 self.vm = vm.VM(self.source)
                 self.vm_playing = False
 
@@ -102,30 +99,39 @@ class Debugger:
             imgui.end()
 
     def vm_status(self):
+        halt = str(self.vm.halt)
+        opcode = str(hex(self.vm.opcode)) if self.vm.opcode else "No opcode"
+        label = "No label"
+        for key, val in self.syms.items():
+            if val == self.vm.registers["PC"].value:
+                label = key
+        byte = str(hex(self.vm.ram[self.vm.registers["PC"].value]))
+        status = "VM Not Running"
+        if self.vm_suspended:
+            status = "VM Suspended"
+        elif self.vm_playing:
+            status = "VM Running"
+        time = str(self.time)
+
         if imgui.begin_table("VM Status", 2):
             # CPU halted
             imgui.table_next_row()
             imgui.table_set_column_index(0)
             imgui.text("CPU halted")
             imgui.table_set_column_index(1)
-            imgui.text(str(self.vm.halt))
+            imgui.text(halt)
 
             # Opcode
             imgui.table_next_row()
             imgui.table_set_column_index(0)
             imgui.text("Opcode")
             imgui.table_set_column_index(1)
-            imgui.text(str(hex(self.vm.opcode))
-                       if self.vm.opcode else "No opcode")
+            imgui.text(opcode)
 
             imgui.table_next_row()
             imgui.table_set_column_index(0)
             imgui.text("Label")
             imgui.table_set_column_index(1)
-            label = "No label"
-            for key, val in self.syms.items():
-                if val == self.vm.registers["PC"].value:
-                    label = key
             imgui.text(label)
 
             # Byte
@@ -133,28 +139,41 @@ class Debugger:
             imgui.table_set_column_index(0)
             imgui.text("Byte")
             imgui.table_set_column_index(1)
-            imgui.text(str(hex(self.vm.ram[self.vm.registers["PC"].value])))
+            imgui.text(byte)
 
             # Execution status
             imgui.table_next_row()
             imgui.table_set_column_index(0)
             imgui.text("Status")
             imgui.table_set_column_index(1)
-            text = "VM Not Running"
-            if self.vm_suspended:
-                text = "VM Suspended"
-            elif self.vm_playing:
-                text = "VM Running"
-            imgui.text(text)
+            imgui.text(status)
 
             # Time
             imgui.table_next_row()
             imgui.table_set_column_index(0)
             imgui.text("Time")
             imgui.table_set_column_index(1)
-            imgui.text(str(self.time))
+            imgui.text(time)
 
             imgui.end_table()
+
+            text_val = "z80emu_status_dump.json"
+            changed, filename = imgui.input_text("", text_val)
+            json_str = "{"
+            if imgui.button("Save"):
+                print("-- Saving to file --")
+                json_str += f"\"halt\": {halt.lower()},"
+                json_str += f"\"opcode\": \"{opcode}\","
+                json_str += f"\"label\": \"{label}\","
+                json_str += f"\"byte\": {int(byte, 16)},"
+                json_str += f"\"status\": \"{status}\","
+                json_str += f"\"time\": {time}"
+                json_str += "}"
+
+                import os
+                dirent = os.path.dirname(os.path.realpath(__file__))
+                with open(os.path.join(dirent, filename), "w") as f:
+                    f.write(json_str)
 
     def ram_view(self):
         if imgui.begin("RAM View"):
