@@ -153,16 +153,39 @@ class Debugger:
                     imgui.table_next_row()
                     for col in range(32):
                         imgui.table_set_column_index(col)
-                        data = self.vm.ram[32 * row + col - 1]
-                        if data != 0:
+                        idx = 32 * row + col
+                        if idx >= len(self.vm.ram):
+                            imgui.end_table()
+                            imgui.end()
+                            return
+                        data = self.vm.ram[idx]
+                        text = str(hex(data))
+                        is_label = False
+                        for key, val in self.syms.items():
+                            if val == addr:
+                                is_label = True
+                                break
+
+                        if data != 0 and not is_label:
                             imgui.push_style_color(imgui.COLOR_TEXT, 0xff, 0xff, 0x00)
-                            imgui.text(str(hex(data)))
+                            imgui.text(text)
+                            imgui.pop_style_color()
+                        elif data == 0 and is_label:
+                            imgui.push_style_color(imgui.COLOR_TEXT, 0x00, 0xff, 0x00)
+                            imgui.text(text)
+                            imgui.pop_style_color()
+                        elif data != 0 and is_label:
+                            imgui.push_style_color(imgui.COLOR_TEXT, 0xff, 0xA5, 0x00)
+                            imgui.text(text)
                             imgui.pop_style_color()
                         else:
-                            imgui.text(str(hex(data)))
+                            imgui.text(text)
 
                         if imgui.is_item_hovered():
-                            imgui.set_tooltip(str(hex(addr)))
+                            tooltip = str(hex(addr))
+                            if is_label:
+                                tooltip += f" [{key}]"
+                            imgui.set_tooltip(tooltip)
                         addr += 1
 
                         #
