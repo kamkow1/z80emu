@@ -32,10 +32,7 @@ class VM:
         handler_push_r16,
         handler_pop_r16
     )
-    from ._vmutils import (
-        dump_registers,
-        setup_flags_and_pc
-    )
+    from ._vmutils import dump_registers
 
     bin_to_str_regs = {
             0b111: "A",
@@ -48,6 +45,7 @@ class VM:
 
     def __init__(self, source):
         self.source = source
+        self.opcode = None
         self.ram = [0] * 0xFFFF
         for i, byte in enumerate(source):
             self.ram[i] = byte
@@ -75,6 +73,13 @@ class VM:
                 "R": Z80Register("R", "Memory refresh"),
                 "SP": Z80Register("SP", "Stack pointer"),
                 "PC": Z80Register("PC", "Program counter")}
+
+        self.registers["PC"].value = 0
+        self.registers["C"].value = False
+        self.registers["Z"].value = False
+        self.registers["S"].value = False
+        self.registers["N"].value = False
+        self.registers["P/V"].value = False
 
         self.opcode_handlers = {
                 # -- Ld --
@@ -126,21 +131,17 @@ class VM:
     def increment_pc(self):
         self.registers["PC"].value += 1
 
+    def step(self):
+        self.tick += 1
+        self.opcode = self.ram[self.registers["PC"].value]
+        print(f"OPCODE: {hex(self.opcode)}")
+        self.increment_pc()
+        try:
+            self.opcode_handlers[self.opcode](self.opcode)
+        except KeyError:
+            print(f"Error: encountered an unknown opcode `{hex(self.opcode)}`")
+
     def exec(self):
-        self.setup_flags_and_pc()
-
         while True:
-            self.tick += 1
-
-            if self.halt:
-                if self.tick % 10000000 == 0:
-                    print(f"Info: CPU Halted, self.tick = {self.tick}")
-                continue
-
-            opcode = self.ram[self.registers["PC"].value]
-            print(f"OPCODE: {hex(opcode)}")
-            self.increment_pc()
-            try:
-                self.opcode_handlers[opcode](opcode)
-            except KeyError:
-                print(f"Error: encountered an unknown opcode `{hex(opcode)}`")
+            if not self.halt:
+                self.step()

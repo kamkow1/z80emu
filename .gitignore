@@ -4,3 +4,4 @@ venv
 *.sym
 __pycache__
 vm/__pycache__
+debugger/__pycache__

@@ -43,13 +43,13 @@ def pop_regpair_helper(self, reg1, reg2):
 
 def handler_push_r16(self, opcode):
     reg = (opcode >> 4) & 3
-    if reg == 0x0:
+    if reg == 0:
         push_regpair_helper(self, "B", "C")
-    elif reg == 0x1:
+    elif reg ==1:
         push_regpair_helper(self, "D", "E")
-    elif reg == 0x2:
+    elif reg == 2:
         push_regpair_helper(self, "H", "L")
-    elif reg == 0x3:
+    elif reg == 3:
         push_regpair_helper(self, "A", "F")
     else:
         print("Error: unhandled register in handler_push_r16():",
@@ -59,9 +59,9 @@ def handler_push_r16(self, opcode):
 
 def handler_pop_r16(self, opcode):
     reg = (opcode >> 4) & 3
-    if reg == 0x0:
+    if reg == 0:
         pop_regpair_helper(self, "B", "C")
-    elif reg == 0x2:
+    elif reg == 2:
         pop_regpair_helper(self, "H", "L")
     else:
         print("Error: unhandled register in handler_pop_r16():",

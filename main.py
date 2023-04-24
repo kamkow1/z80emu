@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 
 import sys
+import argparse
 import vm
+import debugger
 
-if len(sys.argv) < 2:
-    print("Error: please provide an input file.\n",
-          "Hint: main.py <path-to-compiled-z80-asm>")
-    sys.exit(1)
+
+parser = argparse.ArgumentParser(description="a z80 chip emulator")
+parser.add_argument("file")
+parser.add_argument("-debug", action="store_true")
+args = parser.parse_args()
 
 with open(sys.argv[1], "rb") as f:
-    vm = vm.VM(f.read())
-    vm.exec()
-
+    source = f.read()
+    if args.debug:
+        dbg = debugger.Debugger(source)
+    else:
+        vm.VM(source).exec()

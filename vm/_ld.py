@@ -19,16 +19,16 @@ def handler_ld_r16_n_n(self, opcode):
     high_byte = self.ram[self.registers["PC"].value]
     self.increment_pc()
 
-    if reg == 0x0:
+    if reg == 0:
         self.registers["B"].value = high_byte
         self.registers["C"].value = low_byte
-    if reg == 0x1:
+    if reg == 1:
         self.registers["D"].value = high_byte
         self.registers["E"].value = low_byte
-    elif reg == 0x2:
+    elif reg == 2:
         self.registers["H"].value = high_byte
         self.registers["L"].value = low_byte
-    elif reg == 0x3:
+    elif reg == 3:
         self.registers["SP"].value = (high_byte << 8) | low_byte
     else:
         print("Error: unhandled register in handler_ld_r16_n_n():",
