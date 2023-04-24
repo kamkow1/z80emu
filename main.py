@@ -17,5 +17,6 @@ with open(sys.argv[1], "rb") as f:
     if args.debug:
         with open(args.sym, "r") as syms:
             dbg = debugger.Debugger(source, syms.read())
+            dbg.end_debugger()
     else:
         vm.VM(source).exec()

@@ -40,9 +40,6 @@ class Debugger:
             self.impl.render(imgui.get_draw_data())
             glfw.swap_buffers(self.window)
 
-    def __del__(self):
-        self.end_debugger()
-
     def end_debugger(self):
         self.impl.shutdown()
         glfw.terminate()
