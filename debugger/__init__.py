@@ -170,20 +170,23 @@ class Debugger:
                                 is_label = True
                                 break
 
-                        if data != 0 and not is_label:
-                            imgui.push_style_color(imgui.COLOR_TEXT, 0xff, 0xff, 0x00)
-                            imgui.text(text)
-                            imgui.pop_style_color()
-                        elif data == 0 and is_label:
-                            imgui.push_style_color(imgui.COLOR_TEXT, 0x00, 0xff, 0x00)
-                            imgui.text(text)
-                            imgui.pop_style_color()
-                        elif data != 0 and is_label:
-                            imgui.push_style_color(imgui.COLOR_TEXT, 0xff, 0xA5, 0x00)
-                            imgui.text(text)
-                            imgui.pop_style_color()
+                        # data highlighting
+                        style = ()
+                        if addr == self.vm.registers["PC"].value:
+                            style = (0xff, 0x00, 0x00)
                         else:
-                            imgui.text(text)
+                            if data != 0 and not is_label:
+                                style = (0xff, 0xff, 0x00)
+                            elif data == 0 and is_label:
+                                style = (0x00, 0xff, 0x00)
+                            elif data != 0 and is_label:
+                                style = (0xff, 0xA5, 0x00)
+                            else:
+                                style = (0xff, 0xff, 0xff)
+
+                        imgui.push_style_color(imgui.COLOR_TEXT, *style)
+                        imgui.text(text)
+                        imgui.pop_style_color()
 
                         if imgui.is_item_hovered():
                             tooltip = str(hex(addr))
