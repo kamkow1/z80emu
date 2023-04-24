@@ -7,7 +7,12 @@ import sys
 
 
 class Debugger:
-    def __init__(self, source):
+    def __init__(self, source, syms):
+        self.syms = {}
+        for line in syms.splitlines():
+            tokens = line.split()
+            self.syms[tokens[0]] = int(tokens[2].replace("$", ""), 16)
+
         self.source = source
         self.vm = vm.VM(source)
         self.vm_playing = False
@@ -94,12 +99,14 @@ class Debugger:
 
     def vm_status(self):
         if imgui.begin_table("VM Status", 2):
+            # CPU halted
             imgui.table_next_row()
             imgui.table_set_column_index(0)
             imgui.text("CPU halted")
             imgui.table_set_column_index(1)
             imgui.text(str(self.vm.halt))
 
+            # Opcode
             imgui.table_next_row()
             imgui.table_set_column_index(0)
             imgui.text("Opcode")
@@ -107,6 +114,24 @@ class Debugger:
             imgui.text(str(hex(self.vm.opcode))
                        if self.vm.opcode else "No opcode")
 
+            imgui.table_next_row()
+            imgui.table_set_column_index(0)
+            imgui.text("Label")
+            imgui.table_set_column_index(1)
+            label = "No label"
+            for key, val in self.syms.items():
+                if val == self.vm.registers["PC"].value:
+                    label = key
+            imgui.text(label)
+
+            # Byte
+            imgui.table_next_row()
+            imgui.table_set_column_index(0)
+            imgui.text("Byte")
+            imgui.table_set_column_index(1)
+            imgui.text(str(hex(self.vm.ram[self.vm.registers["PC"].value])))
+
+            # Execution status
             imgui.table_next_row()
             imgui.table_set_column_index(0)
             imgui.text("Status")
