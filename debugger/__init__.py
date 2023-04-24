@@ -21,6 +21,8 @@ class Debugger:
         self.window = self.impl_glfw_init()
         self.impl = GlfwRenderer(self.window)
 
+        imgui.get_io().ini_file_name = None
+
         while not glfw.window_should_close(self.window):
             glfw.poll_events()
             self.impl.process_inputs()
