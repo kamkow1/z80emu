@@ -9,7 +9,7 @@ main:
   ld hl, 44
   call some_label
   nop
-  halt
+  ; halt
 
 some_other_label:
   nop

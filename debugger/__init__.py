@@ -4,6 +4,7 @@ import glfw
 import imgui
 import vm
 import sys
+from timeit import default_timer
 
 
 class Debugger:
@@ -17,6 +18,8 @@ class Debugger:
         self.vm = vm.VM(source)
         self.vm_playing = False
         self.vm_suspended = False
+        self.timer_start = 0.0
+        self.time = 0.0
         imgui.create_context()
         self.window = self.impl_glfw_init()
         self.impl = GlfwRenderer(self.window)
@@ -71,7 +74,9 @@ class Debugger:
 
             btn_play_clicked = imgui.button("Run program")
             if btn_play_clicked:
+                self.timer_start = default_timer()
                 self.vm_playing = True
+                self.vm_suspended = False
 
             btn_suspend_clicked = imgui.button("Suspend execution")
             if btn_suspend_clicked:
@@ -142,6 +147,13 @@ class Debugger:
                 text = "VM Running"
             imgui.text(text)
 
+            # Time
+            imgui.table_next_row()
+            imgui.table_set_column_index(0)
+            imgui.text("Time")
+            imgui.table_set_column_index(1)
+            imgui.text(str(self.time))
+
             imgui.end_table()
 
     def ram_view(self):
@@ -200,6 +212,9 @@ class Debugger:
             imgui.end()
 
     def frame_cmds(self):
+        if self.vm_playing and not self.vm_suspended:
+            self.time = default_timer() - self.timer_start
+
         if imgui.begin("z80emu debugger"):
             self.window_menu_bar()
             self.vm_status()
