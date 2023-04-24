@@ -154,10 +154,14 @@ class Debugger:
                     for col in range(32):
                         imgui.table_set_column_index(col)
                         idx = 32 * row + col
-                        if idx >= len(self.vm.ram):
+                        if idx > len(self.vm.ram):
                             imgui.end_table()
                             imgui.end()
                             return
+
+                        if idx == len(self.vm.ram):
+                            idx -= 1
+
                         data = self.vm.ram[idx]
                         text = str(hex(data))
                         is_label = False
