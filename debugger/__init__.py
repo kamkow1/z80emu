@@ -147,10 +147,35 @@ class Debugger:
 
             imgui.end_table()
 
+    def ram_view(self):
+        if imgui.begin("RAM View"):
+            if imgui.begin_table("RAM Cells", 32):
+                addr = 0x0
+                # 255 x 257 = 0xffff
+                for row in range(2048):
+                    imgui.table_next_row()
+                    for col in range(32):
+                        imgui.table_set_column_index(col)
+                        data = self.vm.ram[32 * row + col - 1]
+                        if data != 0:
+                            imgui.push_style_color(imgui.COLOR_TEXT, 0xff, 0xff, 0x00)
+                            imgui.text(str(hex(data)))
+                            imgui.pop_style_color()
+                        else:
+                            imgui.text(str(hex(data)))
+
+                        if imgui.is_item_hovered():
+                            imgui.set_tooltip(str(hex(addr)))
+                        addr += 1
+
+                        #
+                imgui.end_table()
+            imgui.end()
+
     def frame_cmds(self):
         if imgui.begin("z80emu debugger"):
-            self.vm_status()
-
             self.window_menu_bar()
+            self.vm_status()
             self.registers_table()
+            self.ram_view()
             imgui.end()
