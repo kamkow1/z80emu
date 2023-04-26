@@ -12,7 +12,8 @@ class VM:
     from ._jp import (
         handler_jp_n_n,
         handler_jp_z_n_n,
-        handler_jp_nz_n_n
+        handler_jp_nz_n_n,
+        handler_jr_d
     )
     from ._ld import (
         handler_ld_r8_n,
@@ -93,6 +94,9 @@ class VM:
                 0xCA: self.handler_jp_z_n_n,
                 0xC2: self.handler_jp_nz_n_n,
 
+                # -- Jr --
+                0x18: self.handler_jr_d,
+
                 # -- Call --
                 0xCD: self.handler_call_n_n,
                 0xCC: self.handler_call_z_n_n,
@@ -122,11 +126,11 @@ class VM:
                 # -- Cp --
                 0xFE: self.handler_cp_n,
 
-                # -- Nop --
-                0x00: self.handler_nop,
-
                 # -- Halt --
-                0x76: self.handler_halt}
+                0x76: self.handler_halt,
+                
+                # -- Nop --
+                0x0: self.handler_nop}
 
     def increment_pc(self):
         self.registers["PC"].value += 1
@@ -135,7 +139,9 @@ class VM:
         self.tick += 1
         self.opcode = self.ram[self.registers["PC"].value]
         print(f"OPCODE: {hex(self.opcode)}")
+
         self.increment_pc()
+
         try:
             self.opcode_handlers[self.opcode](self.opcode)
         except KeyError:
