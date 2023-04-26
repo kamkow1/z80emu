@@ -4,10 +4,12 @@
   .sf out.sym
 
 main:
-    jr 6
-    ld hl, 22
-    ld bc, 33
-    nop
-    ld hl, 69
-    ld bc, 22
-    halt
+  ld a, 33
+  cp 33
+  jr z, 6
+  ld hl, 22
+  ld bc, 33
+  nop
+  ld hl, 69
+  ld bc, 22
+  halt

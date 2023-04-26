@@ -13,7 +13,11 @@ class VM:
         handler_jp_n_n,
         handler_jp_z_n_n,
         handler_jp_nz_n_n,
-        handler_jr_d
+        handler_jr_d,
+        handler_jr_z_d,
+        handler_jr_nz_d,
+        handler_jr_c_d,
+        handler_jr_nc_d
     )
     from ._ld import (
         handler_ld_r8_n,
@@ -96,6 +100,10 @@ class VM:
 
                 # -- Jr --
                 0x18: self.handler_jr_d,
+                0x28: self.handler_jr_z_d,
+                0x20: self.handler_jr_nz_d,
+                0x38: self.handler_jr_c_d,
+                0x30: self.handler_jr_nc_d,
 
                 # -- Call --
                 0xCD: self.handler_call_n_n,
