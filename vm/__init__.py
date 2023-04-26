@@ -13,6 +13,8 @@ class VM:
         handler_jp_n_n,
         handler_jp_z_n_n,
         handler_jp_nz_n_n,
+    )
+    from ._jr import (
         handler_jr_d,
         handler_jr_z_d,
         handler_jr_nz_d,
