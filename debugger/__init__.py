@@ -3,6 +3,7 @@ import OpenGL.GL as gl
 import glfw
 import imgui
 import vm
+from ._breakpoints_view import Breakpoint
 import sys
 from timeit import default_timer
 
@@ -12,6 +13,7 @@ class Debugger:
     from ._window_menu_bar import window_menu_bar
     from ._registers_table import registers_table
     from ._vm_status import vm_status
+    from ._breakpoints_view import breakpoints_view
 
     def __init__(self, source, syms):
         self.syms = {}
@@ -21,6 +23,7 @@ class Debugger:
 
         self.source = source
         self.vm = vm.VM(source)
+        self.breakpoints = []
         self.vm_playing = False
         self.vm_suspended = False
         self.timer_start = 0.0
@@ -31,6 +34,12 @@ class Debugger:
 
         imgui.get_io().ini_file_name = None
 
+        # break on the first instruction
+        self.breakpoints.append(Breakpoint(
+            self.vm.ram[self.vm.registers["PC"].value],
+            self.vm.registers["PC"].value,
+            True))
+
         while not glfw.window_should_close(self.window):
             glfw.poll_events()
             self.impl.process_inputs()
@@ -38,7 +47,14 @@ class Debugger:
             imgui.new_frame()
             self.frame_cmds()
             if self.vm_playing and not self.vm.halt:
-                if not self.vm_suspended:
+                _break = False
+                pc = self.vm.registers["PC"].value
+                for bp in self.breakpoints:
+                    print(pc, bp.addr)
+                    if pc == bp.addr:
+                        _break = bp.on_state
+
+                if not self.vm_suspended and not _break:
                     self.vm.step()
 
             gl.glClearColor(0.1, 0.1, 0.1, 1)
@@ -77,4 +93,5 @@ class Debugger:
             self.vm_status()
             self.registers_table()
             self.ram_view()
+            self.breakpoints_view()
             imgui.end()

@@ -1,5 +1,8 @@
 import imgui
 import sys
+from timeit import default_timer
+import vm
+
 
 def window_menu_bar(self):
     if imgui.begin_main_menu_bar():
@@ -21,5 +24,8 @@ def window_menu_bar(self):
         if imgui.button("Reset"):
             self.vm = vm.VM(self.source)
             self.vm_playing = False
+
+        if imgui.button("Next BP"):
+            self.breakpoints.pop()
 
         imgui.end_main_menu_bar()
