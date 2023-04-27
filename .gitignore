@@ -1,5 +1,6 @@
 venv
 .idea
+.vs
 *.bin
 *.lst
 *.sym
