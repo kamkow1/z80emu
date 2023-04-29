@@ -42,6 +42,9 @@ main:
   ld l, 16
   ld (hl), l
 
+
   ld a, (hl)
+  ld (bc), a
+
   halt
 

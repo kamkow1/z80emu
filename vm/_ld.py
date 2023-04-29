@@ -70,3 +70,13 @@ def handler_ld_hl_r8(self, opcode):
 
 def handler_ld_r8_hl(self, opcode):
     ld_from_indirect_addr_into_r8_helper(self, opcode, "HL")
+
+
+def handler_ld_bc_a(self, opcode):
+    data = self.registers["A"].value
+    ld_indirect_addr_helper(self, "BC", data, inc_pc=False)
+
+
+def handler_ld_de_a(self, opcode):
+    data = self.registers["A"].value
+    ld_indirect_addr_helper(self, "DE", data, inc_pc=False)
