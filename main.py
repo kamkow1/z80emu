@@ -19,4 +19,4 @@ with open(sys.argv[1], "rb") as f:
             dbg = debugger.Debugger(source, syms.read())
             dbg.end_debugger()
     else:
-        vm.VM(source).exec()
+        vm.VM(source).run()

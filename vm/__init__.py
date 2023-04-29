@@ -138,7 +138,7 @@ class VM:
 
                 # -- Halt --
                 0x76: self.handler_halt,
-                
+
                 # -- Nop --
                 0x0: self.handler_nop}
 
@@ -147,8 +147,10 @@ class VM:
 
     def step(self):
         self.tick += 1
+        if self.registers["PC"].value >= len(self.ram):
+            return False
         self.opcode = self.ram[self.registers["PC"].value]
-        print(f"OPCODE: {hex(self.opcode)}")
+        print(f"opcode {hex(self.opcode)}")
 
         self.increment_pc()
 
@@ -157,7 +159,10 @@ class VM:
         except KeyError:
             print(f"Error: encountered an unknown opcode `{hex(self.opcode)}`")
 
-    def exec(self):
-        while True:
+        return True
+
+    def run(self):
+        stop = False
+        while not stop:
             if not self.halt:
-                self.step()
+                stop = self.step()
