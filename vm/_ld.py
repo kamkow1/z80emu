@@ -47,41 +47,12 @@ def ld_indirect_addr_helper(self, pair, value, inc_pc):
     self.ram[full_addr] = value
 
 
-def handler_ld_hl_n_indirect(self, opcode):
+def handler_ld_hl_n(self, opcode):
     data = self.ram[self.registers["PC"].value]
     ld_indirect_addr_helper(self, "HL", data, inc_pc=True)
 
 
-def handler_ld_hl_a_indirect(self, opcode):
-    data = self.registers["A"].value
-    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
-
-
-def handler_ld_hl_b_indirect(self, opcode):
-    data = self.registers["B"].value
-    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
-
-
-def handler_ld_hl_c_indirect(self, opcode):
-    data = self.registers["C"].value
-    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
-
-
-def handler_ld_hl_d_indirect(self, opcode):
-    data = self.registers["D"].value
-    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
-
-
-def handler_ld_hl_e_indirect(self, opcode):
-    data = self.registers["E"].value
-    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
-
-
-def handler_ld_hl_h_indirect(self, opcode):
-    data = self.registers["H"].value
-    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
-
-
-def handler_ld_hl_l_indirect(self, opcode):
-    data = self.registers["L"].value
+def handler_ld_hl_r8(self, opcode):
+    reg = ((opcode << 5) & (7 << 9)) >> 9
+    data = self.registers[self.bin_to_str_regs[reg]].value
     ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
