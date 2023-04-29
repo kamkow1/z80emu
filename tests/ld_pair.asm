@@ -41,5 +41,7 @@ main:
   ld hl, 350
   ld l, 16
   ld (hl), l
+
+  ld a, (hl)
   halt
 

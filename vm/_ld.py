@@ -47,6 +47,16 @@ def ld_indirect_addr_helper(self, pair, value, inc_pc):
     self.ram[full_addr] = value
 
 
+def ld_from_indirect_addr_into_r8_helper(self, opcode, pair):
+    reg = (opcode & 56) >> 3
+    low_byte = self.registers[pair[1]].value
+    high_byte = self.registers[pair[0]].value
+
+    full_addr = high_byte << 8 | low_byte
+    data = self.ram[full_addr]
+    self.registers[self.bin_to_str_regs[reg]].value = data
+
+
 def handler_ld_hl_n(self, opcode):
     data = self.ram[self.registers["PC"].value]
     ld_indirect_addr_helper(self, "HL", data, inc_pc=True)
@@ -56,3 +66,7 @@ def handler_ld_hl_r8(self, opcode):
     reg = ((opcode << 5) & (7 << 9)) >> 9
     data = self.registers[self.bin_to_str_regs[reg]].value
     ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
+
+
+def handler_ld_r8_hl(self, opcode):
+    ld_from_indirect_addr_into_r8_helper(self, opcode, "HL")

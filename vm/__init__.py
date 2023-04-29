@@ -24,7 +24,8 @@ class VM:
         handler_ld_r8_n,
         handler_ld_r16_n_n,
         handler_ld_hl_n,
-        handler_ld_hl_r8
+        handler_ld_hl_r8,
+        handler_ld_r8_hl
     )
     from ._stack import (
         handler_call_n_n,
@@ -102,14 +103,15 @@ class VM:
                 0x21: self.handler_ld_r16_n_n,       # ld hl, n, n
                 0x01: self.handler_ld_r16_n_n,       # ld bc, n, n
                 0x31: self.handler_ld_r16_n_n,       # ld sp, n, n
-                0x36: self.handler_ld_hl_n,
-                0x77: self.handler_ld_hl_r8,
-                0x70: self.handler_ld_hl_r8,
-                0x71: self.handler_ld_hl_r8,
-                0x72: self.handler_ld_hl_r8,
-                0x73: self.handler_ld_hl_r8,
-                0x74: self.handler_ld_hl_r8,
-                0x75: self.handler_ld_hl_r8,
+                0x36: self.handler_ld_hl_n,          # ld (hl), n
+                0x77: self.handler_ld_hl_r8,         # ld (hl), a
+                0x70: self.handler_ld_hl_r8,         # ld (hl), b
+                0x71: self.handler_ld_hl_r8,         # ld (hl), c
+                0x72: self.handler_ld_hl_r8,         # ld (hl), d
+                0x73: self.handler_ld_hl_r8,         # ld (hl), e
+                0x74: self.handler_ld_hl_r8,         # ld (hl), h
+                0x75: self.handler_ld_hl_r8,         # ld (hl), l
+                0x7E: self.handler_ld_r8_hl,         # ld a, (hl)
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,
