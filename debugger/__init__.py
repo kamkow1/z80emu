@@ -37,8 +37,7 @@ class Debugger:
         # break on the first instruction
         self.breakpoints.append(Breakpoint(
             self.vm.ram[self.vm.registers["PC"].value],
-            self.vm.registers["PC"].value,
-            True))
+            self.vm.registers["PC"].value))
 
         while not glfw.window_should_close(self.window):
             glfw.poll_events()
@@ -50,9 +49,7 @@ class Debugger:
                 _break = False
                 pc = self.vm.registers["PC"].value
                 for bp in self.breakpoints:
-                    print(pc, bp.addr)
-                    if pc == bp.addr:
-                        _break = bp.on_state
+                    _break = pc == bp.addr
 
                 if not self.vm_suspended and not _break:
                     self.vm.step()

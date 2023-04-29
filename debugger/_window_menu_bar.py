@@ -26,6 +26,6 @@ def window_menu_bar(self):
             self.vm_playing = False
 
         if imgui.button("Next BP"):
-            self.breakpoints.pop()
+            self.breakpoints.pop(0)
 
         imgui.end_main_menu_bar()
