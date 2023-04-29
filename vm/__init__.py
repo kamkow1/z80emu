@@ -1,8 +1,7 @@
 class Z80Register:
-    def __init__(self, short_name, desc):
+    def __init__(self, short_name):
         self.value = None
         self.short_name = short_name
-        self.desc = desc
 
 
 class VM:
@@ -24,7 +23,14 @@ class VM:
     from ._ld import (
         handler_ld_r8_n,
         handler_ld_r16_n_n,
-        handler_ld_hl_n_indirect
+        handler_ld_hl_n_indirect,
+        handler_ld_hl_a_indirect,
+        handler_ld_hl_b_indirect,
+        handler_ld_hl_c_indirect,
+        handler_ld_hl_d_indirect,
+        handler_ld_hl_e_indirect,
+        handler_ld_hl_h_indirect,
+        handler_ld_hl_l_indirect
     )
     from ._stack import (
         handler_call_n_n,
@@ -65,22 +71,23 @@ class VM:
         self.halt = False
 
         self.registers = {
-                "A": Z80Register("A", "Accumulator"),
-                "B": Z80Register("B", "Accumulator"),
-                "D": Z80Register("D", "Accumulator"),
-                "H": Z80Register("H", "Accumulator"),
-                "C": Z80Register("C", "Carry flag"),
-                "Z": Z80Register("Z", "Zero flag"),
-                "S": Z80Register("S", "Sign flag"),
-                "N": Z80Register("N", "Add/Sub flag"),
-                "L": Z80Register("L", "flag"),
-                "P/V": Z80Register("P/V", "Parity/overflow flag"),
-                "IX": Z80Register("IX", "Index register"),
-                "IY": Z80Register("IY", "Index register"),
-                "I": Z80Register("I", "Interrupt vector"),
-                "R": Z80Register("R", "Memory refresh"),
-                "SP": Z80Register("SP", "Stack pointer"),
-                "PC": Z80Register("PC", "Program counter")}
+                "A": Z80Register("A"),
+                "B": Z80Register("B"),
+                "C": Z80Register("C"),
+                "D": Z80Register("D"),
+                "E": Z80Register("E"),
+                "H": Z80Register("H"),
+                "L": Z80Register("L"),
+                "N": Z80Register("N"),
+                "S": Z80Register("S"),
+                "Z": Z80Register("Z"),
+                "P/V": Z80Register("P/V"),
+                "IX": Z80Register("IX"),
+                "IY": Z80Register("IY"),
+                "I": Z80Register("I"),
+                "R": Z80Register("R"),
+                "SP": Z80Register("SP"),
+                "PC": Z80Register("PC")}
 
         self.registers["PC"].value = 0
         self.registers["C"].value = False
@@ -92,10 +99,23 @@ class VM:
         self.opcode_handlers = {
                 # -- Ld --
                 0x3E: self.handler_ld_r8_n,          # ld a, n
+                0x06: self.handler_ld_r8_n,          # ld b, n
+                0x0E: self.handler_ld_r8_n,          # ld c, n
+                0x16: self.handler_ld_r8_n,          # ld d, n
+                0x1e: self.handler_ld_r8_n,          # ld e, n
+                0x26: self.handler_ld_r8_n,          # ld h, n
+                0x2E: self.handler_ld_r8_n,          # ld l, n
                 0x21: self.handler_ld_r16_n_n,       # ld hl, n, n
                 0x01: self.handler_ld_r16_n_n,       # ld bc, n, n
                 0x31: self.handler_ld_r16_n_n,       # ld sp, n, n
-                0x36: self.handler_ld_hl_n_indirect, # ld (hl), n 
+                0x36: self.handler_ld_hl_n_indirect,
+                0x77: self.handler_ld_hl_a_indirect,
+                0x70: self.handler_ld_hl_b_indirect,
+                0x71: self.handler_ld_hl_c_indirect,
+                0x72: self.handler_ld_hl_d_indirect,
+                0x73: self.handler_ld_hl_e_indirect,
+                0x74: self.handler_ld_hl_h_indirect,
+                0x75: self.handler_ld_hl_l_indirect,
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,
@@ -156,10 +176,9 @@ class VM:
 
         self.increment_pc()
 
-        try:
-            self.opcode_handlers[self.opcode](self.opcode)
-        except KeyError:
+        if self.opcode not in self.opcode_handlers:
             print(f"Error: encountered an unknown opcode `{hex(self.opcode)}`")
+        self.opcode_handlers[self.opcode](self.opcode)
 
         return True
 

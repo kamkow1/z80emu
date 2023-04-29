@@ -36,8 +36,7 @@ def handler_ld_r16_n_n(self, opcode):
         sys.exit(1)
 
 
-def ld_indirect_addr_helper(self, pair, inc_pc):
-    data = self.ram[self.registers["PC"].value]
+def ld_indirect_addr_helper(self, pair, value, inc_pc):
     if inc_pc:
         self.increment_pc()
 
@@ -45,8 +44,44 @@ def ld_indirect_addr_helper(self, pair, inc_pc):
     high_byte = self.registers[pair[0]].value
 
     full_addr = high_byte << 8 | low_byte
-    self.ram[full_addr] = data
+    self.ram[full_addr] = value
 
 
 def handler_ld_hl_n_indirect(self, opcode):
-    ld_indirect_addr_helper(self, "HL", inc_pc=True)
+    data = self.ram[self.registers["PC"].value]
+    ld_indirect_addr_helper(self, "HL", data, inc_pc=True)
+
+
+def handler_ld_hl_a_indirect(self, opcode):
+    data = self.registers["A"].value
+    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
+
+
+def handler_ld_hl_b_indirect(self, opcode):
+    data = self.registers["B"].value
+    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
+
+
+def handler_ld_hl_c_indirect(self, opcode):
+    data = self.registers["C"].value
+    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
+
+
+def handler_ld_hl_d_indirect(self, opcode):
+    data = self.registers["D"].value
+    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
+
+
+def handler_ld_hl_e_indirect(self, opcode):
+    data = self.registers["E"].value
+    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
+
+
+def handler_ld_hl_h_indirect(self, opcode):
+    data = self.registers["H"].value
+    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
+
+
+def handler_ld_hl_l_indirect(self, opcode):
+    data = self.registers["L"].value
+    ld_indirect_addr_helper(self, "HL", data, inc_pc=False)
