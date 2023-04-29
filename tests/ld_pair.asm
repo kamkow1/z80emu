@@ -46,5 +46,12 @@ main:
   ld a, (hl)
   ld (bc), a
 
+
+  ld hl, 105 
+  ld (400), hl
+
+  ld a, 1056
+  ld (420), a
+
   halt
 

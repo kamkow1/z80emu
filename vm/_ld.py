@@ -72,6 +72,29 @@ def handler_ld_r8_hl(self, opcode):
     ld_from_indirect_addr_into_r8_helper(self, opcode, "HL")
 
 
+def handler_ld_n_n_hl(self, opcode):
+    n_low = self.ram[self.registers["PC"].value]
+    self.increment_pc()
+    n_high = self.ram[self.registers["PC"].value]
+    self.increment_pc()
+    full_addr = n_high << 8 | n_low
+
+    h = self.registers["H"].value
+    l = self.registers["L"].value
+    hl = h << 8 | l
+
+    self.ram[full_addr] = hl
+
+
+def handler_ld_n_n_a(self, opcode):
+    n_low = self.ram[self.registers["PC"].value]
+    self.increment_pc()
+    n_high = self.ram[self.registers["PC"].value]
+    self.increment_pc()
+    full_addr = n_high << 8 | n_low
+    self.ram[full_addr] = self.registers["A"].value
+
+
 def handler_ld_bc_a(self, opcode):
     data = self.registers["A"].value
     ld_indirect_addr_helper(self, "BC", data, inc_pc=False)
