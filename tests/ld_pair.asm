@@ -4,6 +4,7 @@
   .sf out.sym
 
 main:
+  ld hl, 69
   ld (hl), 56
   halt
 

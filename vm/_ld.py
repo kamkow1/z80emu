@@ -34,3 +34,19 @@ def handler_ld_r16_n_n(self, opcode):
         print("Error: unhandled register in handler_ld_r16_n_n():",
               f"`{hex(reg)}`")
         sys.exit(1)
+
+
+def ld_indirect_addr_helper(self, pair, inc_pc):
+    data = self.ram[self.registers["PC"].value]
+    if inc_pc:
+        self.increment_pc()
+
+    low_byte = self.registers[pair[1]].value
+    high_byte = self.registers[pair[0]].value
+
+    full_addr = high_byte << 8 | low_byte
+    self.ram[full_addr] = data
+
+
+def handler_ld_hl_n_indirect(self, opcode):
+    ld_indirect_addr_helper(self, "HL", inc_pc=True)

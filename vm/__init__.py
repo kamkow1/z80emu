@@ -23,7 +23,8 @@ class VM:
     )
     from ._ld import (
         handler_ld_r8_n,
-        handler_ld_r16_n_n
+        handler_ld_r16_n_n,
+        handler_ld_hl_n_indirect
     )
     from ._stack import (
         handler_call_n_n,
@@ -90,10 +91,11 @@ class VM:
 
         self.opcode_handlers = {
                 # -- Ld --
-                0x3E: self.handler_ld_r8_n,       # ld a, n
-                0x21: self.handler_ld_r16_n_n,    # ld hl, n, n
-                0x01: self.handler_ld_r16_n_n,    # ld bc, n, n
-                0x31: self.handler_ld_r16_n_n,    # ld sp, n, n
+                0x3E: self.handler_ld_r8_n,          # ld a, n
+                0x21: self.handler_ld_r16_n_n,       # ld hl, n, n
+                0x01: self.handler_ld_r16_n_n,       # ld bc, n, n
+                0x31: self.handler_ld_r16_n_n,       # ld sp, n, n
+                0x36: self.handler_ld_hl_n_indirect, # ld (hl), n 
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,
@@ -150,7 +152,7 @@ class VM:
         if self.registers["PC"].value >= len(self.ram):
             return False
         self.opcode = self.ram[self.registers["PC"].value]
-        print(f"opcode {hex(self.opcode)}")
+        #print(f"opcode {hex(self.opcode)}")
 
         self.increment_pc()
 
@@ -162,7 +164,7 @@ class VM:
         return True
 
     def run(self):
-        stop = False
-        while not stop:
+        _continue = True
+        while _continue:
             if not self.halt:
-                stop = self.step()
+                _continue = self.step()
