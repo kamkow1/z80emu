@@ -112,6 +112,12 @@ class VM:
                 0x74: self.handler_ld_hl_r8,         # ld (hl), h
                 0x75: self.handler_ld_hl_r8,         # ld (hl), l
                 0x7E: self.handler_ld_r8_hl,         # ld a, (hl)
+                0x46: self.handler_ld_r8_hl,         # ld b, (hl)
+                0x4E: self.handler_ld_r8_hl,         # ld c, (hl)
+                0x56: self.handler_ld_r8_hl,         # ld d, (hl)
+                0x5E: self.handler_ld_r8_hl,         # ld e, (hl)
+                0x66: self.handler_ld_r8_hl,         # ld h, (hl)
+                0x6E: self.handler_ld_r8_hl,         # ld l, (hl)
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,
