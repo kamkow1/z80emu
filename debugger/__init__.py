@@ -64,6 +64,7 @@ class Debugger:
     def end_debugger(self):
         self.impl.shutdown()
         glfw.terminate()
+        self.vm.video_end()
 
     def impl_glfw_init(self):
         w, h = 800, 600
