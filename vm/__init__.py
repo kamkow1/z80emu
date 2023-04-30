@@ -17,7 +17,7 @@ _font_path = os.path.join(
     os.path.abspath(os.path.dirname(__file__)),
     "../assets",
     FONT_FILE)
-FONT = sdl2.ext.FontTTF(_font_path, "20px", WHITE_RGBA)
+FONT = sdl2.ext.FontTTF(_font_path, "16px", WHITE_RGBA)
 
 
 class Z80Register:
@@ -215,6 +215,9 @@ class VM:
                 cell_addr = 0xFFFF - (17 * row + col) - 1
                 ram_cell = self.ram[cell_addr]
                 ascii_text += chr(ram_cell)
+
+        if all(c == ascii_text[0] for c in ascii_text):
+            ascii_text = "No text to display..."
 
         rendered_text = FONT.render_text(ascii_text, width=WINDOW_WIDTH)
         texture = sdl2.ext.Texture(RENDERER, rendered_text)
