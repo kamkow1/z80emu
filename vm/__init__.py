@@ -150,51 +150,51 @@ class VM:
                 0x23: self.handler_inc_hl,           # inc hl
 
                 # -- Jp --
-                0xC3: self.handler_jp_n_n,
-                0xCA: self.handler_jp_z_n_n,
-                0xC2: self.handler_jp_nz_n_n,
+                0xC3: self.handler_jp_n_n,           # jp n, n
+                0xCA: self.handler_jp_z_n_n,         # jp z, n, n
+                0xC2: self.handler_jp_nz_n_n,        # jp nz, n, n
 
                 # -- Jr --
-                0x18: self.handler_jr_d,
-                0x28: self.handler_jr_z_d,
-                0x20: self.handler_jr_nz_d,
-                0x38: self.handler_jr_c_d,
-                0x30: self.handler_jr_nc_d,
+                0x18: self.handler_jr_d,             # jr d
+                0x28: self.handler_jr_z_d,           # jr z, d
+                0x20: self.handler_jr_nz_d,          # jr nz, d
+                0x38: self.handler_jr_c_d,           # jr c, d
+                0x30: self.handler_jr_nc_d,          # jr nc, d
 
                 # -- Call --
-                0xCD: self.handler_call_n_n,
-                0xCC: self.handler_call_z_n_n,
-                0xC4: self.handler_call_nz_n_n,
-                0xD4: self.handler_call_nc_n_n,
-                0xDC: self.handler_call_c_n_n,
-                0xE4: self.handler_call_po_n_n,
-                0xEC: self.handler_call_pe_n_n,
-                0xF4: self.handler_call_p_n_n,
-                0xFC: self.handler_call_m_n_n,
+                0xCD: self.handler_call_n_n,         # call n, n
+                0xCC: self.handler_call_z_n_n,       # call z, n, n
+                0xC4: self.handler_call_nz_n_n,      # call nz, n, n
+                0xD4: self.handler_call_nc_n_n,      # call nc, n, n
+                0xDC: self.handler_call_c_n_n,       # call c, n, n
+                0xE4: self.handler_call_po_n_n,      # call po, n, n
+                0xEC: self.handler_call_pe_n_n,      # call pe, n, n
+                0xF4: self.handler_call_p_n_n,       # call p, n, n
+                0xFC: self.handler_call_m_n_n,       # call m, n, n
 
                 # -- Ret --
-                0xC9: self.handler_ret,
+                0xC9: self.handler_ret,              # ret
 
                 # -- Push --
-                0xC5: self.handler_push_r16,
-                0xD5: self.handler_push_r16,
-                0xE5: self.handler_push_r16,
-                0xF5: self.handler_push_r16,
+                0xC5: self.handler_push_r16,         # push bc
+                0xD5: self.handler_push_r16,         # push de
+                0xE5: self.handler_push_r16,         # push hl
+                0xF5: self.handler_push_r16,         # push af
 
                 # -- Pop --
-                0xC1: self.handler_pop_r16,
-                0xD1: self.handler_pop_r16,
-                0xE1: self.handler_pop_r16,
-                0xF1: self.handler_pop_r16,
+                0xC1: self.handler_pop_r16,          # pop bc
+                0xD1: self.handler_pop_r16,          # pop de
+                0xE1: self.handler_pop_r16,          # pop hl
+                0xF1: self.handler_pop_r16,          # pop af
 
                 # -- Cp --
-                0xFE: self.handler_cp_n,
+                0xFE: self.handler_cp_n,             # cp n
 
                 # -- Halt --
-                0x76: self.handler_halt,
+                0x76: self.handler_halt,            # halt
 
                 # -- Nop --
-                0x0: self.handler_nop}
+                0x0: self.handler_nop}              # nop
 
     def increment_pc(self):
         self.registers["PC"].value += 1
