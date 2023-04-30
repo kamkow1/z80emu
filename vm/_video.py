@@ -24,18 +24,21 @@ def video_update(self):
     events = sdl2.ext.get_events()
     for event in events:
         if event.type == sdl2.SDL_QUIT:
-            return False
+            return True
 
     # render video buffer
-    # vb: 0xFE01 -> 0xFFFF
-    # 0xFFFF - 0xFE01 = 30 x 17
+    # vb begins at 0xffff - 512
     ascii_text = ""
-    for row in range(17):
-        for col in range(30):
+    self.ram[0xFFFF] = ord("*")
+    for row in range(16):
+        for col in range(32):
             # addresses are measured from the end of RAM (0xFFFF)
-            cell_addr = 0xFFFF - (17 * row + col) - 1
+            cell_addr = 0xFE00 + (32 * row + col)
             ram_cell = self.ram[cell_addr]
+            if ram_cell == 0:
+                ram_cell = 0x20
             ascii_text += chr(ram_cell)
+        ascii_text += "\n"
 
     if all(c == ascii_text[0] for c in ascii_text):
         ascii_text = "No text to display..."

@@ -61,6 +61,8 @@ def handler_pop_r16(self, opcode):
     reg = (opcode >> 4) & 3
     if reg == 0:
         pop_regpair_helper(self, "B", "C")
+    elif reg == 1:
+        pop_regpair_helper(self, "D", "E")
     elif reg == 2:
         pop_regpair_helper(self, "H", "L")
     else:

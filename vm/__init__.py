@@ -64,9 +64,20 @@ class VM:
     def __init__(self, source):
         self.source = source
         self.opcode = None
-        self.ram = [0] * 0xFFFF
+
+        # init ram
+        self.ram = [0] * (0xFFFF + 1)
         for i, byte in enumerate(source):
             self.ram[i] = byte
+
+        # load BIOS
+        with open("bios.bin", "rb") as bios_f:
+            bios = bios_f.read()
+            print(bios)
+            for i in range(0, 0xFE01 - 0xF906):
+                if i >= len(bios):
+                    break
+                self.ram[0xF906 + i] = bios[i]
 
         # cycle counter
         self.tick = 0
@@ -111,6 +122,7 @@ class VM:
                 0x2E: self.handler_ld_r8_n,          # ld l, n
                 0x21: self.handler_ld_r16_n_n,       # ld hl, n, n
                 0x01: self.handler_ld_r16_n_n,       # ld bc, n, n
+                0x11: self.handler_ld_r16_n_n,       # ld de, n, n
                 0x31: self.handler_ld_r16_n_n,       # ld sp, n, n
                 0x36: self.handler_ld_hl_n,          # ld (hl), n
                 0x77: self.handler_ld_hl_r8,         # ld (hl), a
