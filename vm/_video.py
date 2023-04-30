@@ -35,6 +35,7 @@ def video_update(self):
             # addresses are measured from the end of RAM (0xFFFF)
             cell_addr = 0xFE00 + (32 * row + col)
             ram_cell = self.ram[cell_addr]
+            print(hex(cell_addr), ram_cell)
             if ram_cell == 0:
                 ram_cell = 0x20
             ascii_text += chr(ram_cell)

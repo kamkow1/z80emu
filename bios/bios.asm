@@ -1,10 +1,10 @@
   .cr Z80
   .tf bios.bin, BIN
-  ; start from 0xFF00 - 1530
-  .or 0xF906
+  .lf bios.lst
+  .in bios/bios_defs.asm
 
-; params:
-;   - a = character to print
+  .or bios_def_vb_print_char
 bios_vb_print_char:
   ld (hl), a
+  ; inc hl
   ret

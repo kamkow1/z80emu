@@ -73,11 +73,10 @@ class VM:
         # load BIOS
         with open("bios.bin", "rb") as bios_f:
             bios = bios_f.read()
-            print(bios)
-            for i in range(0, 0xFE01 - 0xF906):
+            for i in range(0, 0xFE00 - 0xFA00):
                 if i >= len(bios):
                     break
-                self.ram[0xF906 + i] = bios[i]
+                self.ram[0xFA00 + i] = bios[i]
 
         # cycle counter
         self.tick = 0
