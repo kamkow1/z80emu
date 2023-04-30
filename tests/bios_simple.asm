@@ -6,9 +6,16 @@
 
 main:
     ld sp, 1000
+    ld hl, bios_def_vb_begin
+
 
     ld a, 'a' 
-    ld hl, bios_def_vb_begin
+    call bios_def_vb_print_char
+
+    ld a, 'b' 
+    call bios_def_vb_print_char
+
+    ld a, 'c' 
     call bios_def_vb_print_char
     halt
     

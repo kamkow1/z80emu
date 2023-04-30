@@ -13,6 +13,9 @@ class VM:
     from ._nop import handler_nop
     from ._cp import handler_cp_n
     from ._halt import handler_halt
+    from ._arthm import (
+        handler_inc_hl
+    )
     from ._jp import (
         handler_jp_n_n,
         handler_jp_z_n_n,
@@ -142,6 +145,9 @@ class VM:
                 0x12: self.handler_ld_de_a,          # ld (de), a
                 0x22: self.handler_ld_n_n_hl,        # ld (nn), hl
                 0x32: self.handler_ld_n_n_a,         # ld (nn), a
+
+                # -- Inc --
+                0x23: self.handler_inc_hl,           # inc hl
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,

@@ -6,5 +6,5 @@
   .or bios_def_vb_print_char
 bios_vb_print_char:
   ld (hl), a
-  ; inc hl
+  inc hl
   ret
