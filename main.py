@@ -2,6 +2,7 @@
 
 import sys
 import argparse
+import sdl2
 import vm
 import debugger
 
