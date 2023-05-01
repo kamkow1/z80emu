@@ -150,7 +150,55 @@ class VM:
                 0x12: self.handler_ld_de_a,          # ld (de), a
                 0x22: self.handler_ld_n_n_hl,        # ld (nn), hl
                 0x32: self.handler_ld_n_n_a,         # ld (nn), a
+                0x7F: self.handler_ld_r8_r8,         # ld a, a
+                0x78: self.handler_ld_r8_r8,         # ld a, b
+                0x79: self.handler_ld_r8_r8,         # ld a, c
+                0x7A: self.handler_ld_r8_r8,         # ld a, d
                 0x7B: self.handler_ld_r8_r8,         # ld a, e
+                0x7C: self.handler_ld_r8_r8,         # ld a, h
+                0x7D: self.handler_ld_r8_r8,         # ld a, l
+                0x47: self.handler_ld_r8_r8,         # ld b, a
+                0x40: self.handler_ld_r8_r8,         # ld b, b
+                0x41: self.handler_ld_r8_r8,         # ld b, c
+                0x42: self.handler_ld_r8_r8,         # ld b, d
+                0x43: self.handler_ld_r8_r8,         # ld b, e
+                0x44: self.handler_ld_r8_r8,         # ld b, h
+                0x45: self.handler_ld_r8_r8,         # ld b, l
+                0x4F: self.handler_ld_r8_r8,         # ld c, a
+                0x48: self.handler_ld_r8_r8,         # ld c, b
+                0x49: self.handler_ld_r8_r8,         # ld c, c
+                0x4A: self.handler_ld_r8_r8,         # ld c, d
+                0x4B: self.handler_ld_r8_r8,         # ld c, e
+                0x4C: self.handler_ld_r8_r8,         # ld c, h
+                0x4D: self.handler_ld_r8_r8,         # ld c, l
+                0x57: self.handler_ld_r8_r8,         # ld d, a
+                0x50: self.handler_ld_r8_r8,         # ld d, b
+                0x51: self.handler_ld_r8_r8,         # ld d, c
+                0x52: self.handler_ld_r8_r8,         # ld d, d
+                0x53: self.handler_ld_r8_r8,         # ld d, e
+                0x54: self.handler_ld_r8_r8,         # ld d, h
+                0x55: self.handler_ld_r8_r8,         # ld d, l
+                0x5F: self.handler_ld_r8_r8,         # ld e, a
+                0x58: self.handler_ld_r8_r8,         # ld e, b
+                0x59: self.handler_ld_r8_r8,         # ld e, c
+                0x5A: self.handler_ld_r8_r8,         # ld e, d
+                0x5B: self.handler_ld_r8_r8,         # ld e, e
+                0x5C: self.handler_ld_r8_r8,         # ld e, h
+                0x5D: self.handler_ld_r8_r8,         # ld e, l
+                0x67: self.handler_ld_r8_r8,         # ld h, a
+                0x60: self.handler_ld_r8_r8,         # ld h, b
+                0x61: self.handler_ld_r8_r8,         # ld h, c
+                0x62: self.handler_ld_r8_r8,         # ld h, d
+                0x63: self.handler_ld_r8_r8,         # ld h, e
+                0x64: self.handler_ld_r8_r8,         # ld h, h
+                0x65: self.handler_ld_r8_r8,         # ld h, l
+                0x6F: self.handler_ld_r8_r8,         # ld l, a
+                0x68: self.handler_ld_r8_r8,         # ld l, b
+                0x69: self.handler_ld_r8_r8,         # ld l, c
+                0x6A: self.handler_ld_r8_r8,         # ld l, d
+                0x6B: self.handler_ld_r8_r8,         # ld l, e
+                0x6C: self.handler_ld_r8_r8,         # ld l, h
+                0x6D: self.handler_ld_r8_r8,         # ld l, l
 
                 # -- Inc --
                 0x23: self.handler_inc_r16,           # inc hl
