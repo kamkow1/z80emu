@@ -31,6 +31,3 @@ impl_sys_print_str:
   call impl_sys_print_char 
   inc bc
   jp impl_sys_print_str
-
-impl_sys_print_foo:
-  ret
