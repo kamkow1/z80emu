@@ -38,8 +38,6 @@ def video_update(self):
             if ram_cell == 0:
                 ram_cell = 0x20
             ram_cell = chr(ram_cell)
-            if ram_cell == "\n":
-                break
             ascii_text += ram_cell
         ascii_text += "\n"
 
