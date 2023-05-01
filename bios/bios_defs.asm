@@ -1,12 +1,14 @@
   .cr Z80
 
+bjt_item_len = 3
+
 ; beginning of bios
-bios_def_bios_begin = 0xFA00
+sys_bios_begin = 0xFA00
+
+sys_print_char = sys_bios_begin
+sys_print_str = sys_print_char+bjt_item_len
+sys_print_foo = sys_print_str+bjt_item_len
 
 ; beginning of the video buffer
-bios_def_vb_begin = 0xFE00
+sys_vb_begin = 0xFE00
 
-; puts a character into memory pointed by HL
-; params:
-;   - A, ascii character
-bios_def_vb_print_char = bios_def_bios_begin + 10

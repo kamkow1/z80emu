@@ -31,6 +31,17 @@ def call_helper(self):
     self.registers["PC"].value = addr
 
 
+def ret_helper(self):
+    ret_addr_low = self.ram[self.registers["SP"].value]
+    self.registers["SP"].value += 1
+    ret_addr_high = self.ram[self.registers["SP"].value]
+    self.registers["SP"].value += 1
+
+    ret_addr = ret_addr_high << 8 | ret_addr_low
+
+    self.registers["PC"].value = ret_addr
+
+
 def push_regpair_helper(self, reg1, reg2):
     stack_push(self, self.registers[reg1].value)
     stack_push(self, self.registers[reg2].value)
@@ -115,12 +126,43 @@ def handler_call_m_n_n(self, opcode):
 
 
 def handler_ret(self, opcode):
-    ret_addr_low = self.ram[self.registers["SP"].value]
-    self.registers["SP"].value += 1
-    ret_addr_high = self.ram[self.registers["SP"].value]
-    self.registers["SP"].value += 1
+    ret_helper(self)
 
-    ret_addr = ret_addr_high << 8 | ret_addr_low
 
-    print(f"ret_addr = {hex(ret_addr)}")
-    self.registers["PC"].value = ret_addr
+def handler_ret_z(self, opcode):
+    if self.registers["Z"].value:
+        ret_helper(self)
+
+
+def handler_ret_nz(self, opcode):
+    if not self.registers["Z"].value:
+        ret_helper(self)
+
+
+def handler_ret_c(self, opcode):
+    if self.registers["C"].value:
+        ret_helper(self)
+
+def handler_ret_nc(self, opcode):
+    if not self.registers["C"].value:
+        ret_helper(self)
+
+
+def handler_ret_pe(self, opcode):
+    if self.registers["P/V"].value:
+        ret_helper(self)
+
+
+def handler_ret_po(self, opcode):
+    if not self.registers["P/V"].value:
+        ret_helper(self)
+
+
+def handler_ret_m(self, opcode):
+    if self.registers["S"].value:
+        ret_helper(self)
+
+
+def handler_ret_p(self, opcode):
+    if not self.registers["S"].value:
+        ret_helper(self)

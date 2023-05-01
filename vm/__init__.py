@@ -1,7 +1,7 @@
 class Z80Register:
-    def __init__(self, short_name):
-        self.value = None
+    def __init__(self, short_name, init_value):
         self.short_name = short_name
+        self.value = init_value
 
 
 class VM:
@@ -14,7 +14,7 @@ class VM:
     from ._cp import handler_cp_n
     from ._halt import handler_halt
     from ._arthm import (
-        handler_inc_hl
+        handler_inc_r16
     )
     from ._jp import (
         handler_jp_n_n,
@@ -33,11 +33,13 @@ class VM:
         handler_ld_r16_n_n,
         handler_ld_hl_n,
         handler_ld_hl_r8,
-        handler_ld_r8_hl,
         handler_ld_bc_a,
         handler_ld_de_a,
         handler_ld_n_n_hl,
-        handler_ld_n_n_a
+        handler_ld_n_n_a,
+        handler_ld_a_from_hl_ptr,
+        handler_ld_a_from_bc_ptr,
+        handler_ld_a_from_de_ptr
     )
     from ._stack import (
         handler_call_n_n,
@@ -50,6 +52,14 @@ class VM:
         handler_call_p_n_n,
         handler_call_m_n_n,
         handler_ret,
+        handler_ret_z,
+        handler_ret_nz,
+        handler_ret_c,
+        handler_ret_nc,
+        handler_ret_po,
+        handler_ret_pe,
+        handler_ret_p,
+        handler_ret_m,
         handler_push_r16,
         handler_pop_r16
     )
@@ -88,30 +98,24 @@ class VM:
         self.halt = False
 
         self.registers = {
-                "A": Z80Register("A"),
-                "B": Z80Register("B"),
-                "C": Z80Register("C"),
-                "D": Z80Register("D"),
-                "E": Z80Register("E"),
-                "H": Z80Register("H"),
-                "L": Z80Register("L"),
-                "N": Z80Register("N"),
-                "S": Z80Register("S"),
-                "Z": Z80Register("Z"),
-                "P/V": Z80Register("P/V"),
-                "IX": Z80Register("IX"),
-                "IY": Z80Register("IY"),
-                "I": Z80Register("I"),
-                "R": Z80Register("R"),
-                "SP": Z80Register("SP"),
-                "PC": Z80Register("PC")}
+                "A": Z80Register("A", 0),
+                "B": Z80Register("B", 0),
+                "C": Z80Register("C", 0),
+                "D": Z80Register("D", 0),
+                "E": Z80Register("E", 0),
+                "H": Z80Register("H", 0),
+                "L": Z80Register("L", 0),
+                "N": Z80Register("N", 0),
+                "S": Z80Register("S", 0),
+                "Z": Z80Register("Z", 0),
+                "P/V": Z80Register("P/V", 0),
+                "IX": Z80Register("IX", 0),
+                "IY": Z80Register("IY", 0),
+                "I": Z80Register("I", 0),
+                "R": Z80Register("R", 0),
+                "SP": Z80Register("SP", 0),
+                "PC": Z80Register("PC", 0)}
 
-        self.registers["PC"].value = 0
-        self.registers["C"].value = False
-        self.registers["Z"].value = False
-        self.registers["S"].value = False
-        self.registers["N"].value = False
-        self.registers["P/V"].value = False
 
         self.opcode_handlers = {
                 # -- Ld --
@@ -134,20 +138,19 @@ class VM:
                 0x73: self.handler_ld_hl_r8,         # ld (hl), e
                 0x74: self.handler_ld_hl_r8,         # ld (hl), h
                 0x75: self.handler_ld_hl_r8,         # ld (hl), l
-                0x7E: self.handler_ld_r8_hl,         # ld a, (hl)
-                0x46: self.handler_ld_r8_hl,         # ld b, (hl)
-                0x4E: self.handler_ld_r8_hl,         # ld c, (hl)
-                0x56: self.handler_ld_r8_hl,         # ld d, (hl)
-                0x5E: self.handler_ld_r8_hl,         # ld e, (hl)
-                0x66: self.handler_ld_r8_hl,         # ld h, (hl)
-                0x6E: self.handler_ld_r8_hl,         # ld l, (hl)
+                0x7E: self.handler_ld_a_from_hl_ptr, # ld a, (hl)
+                0x0A: self.handler_ld_a_from_bc_ptr, # ld a, (bc)
+                0x1A: self.handler_ld_a_from_de_ptr, # ld a, (de)
                 0x02: self.handler_ld_bc_a,          # ld (bc), a
                 0x12: self.handler_ld_de_a,          # ld (de), a
                 0x22: self.handler_ld_n_n_hl,        # ld (nn), hl
                 0x32: self.handler_ld_n_n_a,         # ld (nn), a
 
                 # -- Inc --
-                0x23: self.handler_inc_hl,           # inc hl
+                0x23: self.handler_inc_r16,           # inc hl
+                0x03: self.handler_inc_r16,           # inc bc
+                0x13: self.handler_inc_r16,           # inc de
+                0x33: self.handler_inc_r16,           # inc sp
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,           # jp n, n
@@ -174,6 +177,14 @@ class VM:
 
                 # -- Ret --
                 0xC9: self.handler_ret,              # ret
+                0xC8: self.handler_ret_z,            # ret z
+                0xC0: self.handler_ret_nz,           # ret nz
+                0xE0: self.handler_ret_po,           # ret po
+                0xE8: self.handler_ret_pe,           # ret pe
+                0xD8: self.handler_ret_c,            # ret c
+                0xD0: self.handler_ret_nc,           # ret nc
+                0xF0: self.handler_ret_p,            # ret p
+                0xF8: self.handler_ret_m,            # ret m
 
                 # -- Push --
                 0xC5: self.handler_push_r16,         # push bc
@@ -204,13 +215,13 @@ class VM:
         if self.registers["PC"].value >= len(self.ram):
             return False
         self.opcode = self.ram[self.registers["PC"].value]
-        #print(f"opcode {hex(self.opcode)}")
 
         self.increment_pc()
 
         if self.opcode not in self.opcode_handlers:
             print(f"Error: encountered an unknown opcode `{hex(self.opcode)}`")
         else:
+            print(f"opcode {hex(self.opcode)}")
             self.opcode_handlers[self.opcode](self.opcode)
 
         return self.video_update()

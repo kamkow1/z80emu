@@ -2,9 +2,35 @@
   .tf bios.bin, BIN
   .lf bios.lst
   .in bios/bios_defs.asm
+  .or sys_bios_begin 
 
-  .or bios_def_vb_print_char
-bios_vb_print_char:
+; bios jump table
+; must begin at `sys_bios_begin`
+  .db 0xC3
+  .dw impl_sys_print_char
+
+  .db 0xC3
+  .dw impl_sys_print_str
+
+  .db 0xC3
+  .dw impl_sys_print_foo
+
+
+impl_sys_print_char:
   ld (hl), a
   inc hl
+  ret
+
+impl_sys_print_str:
+  ld a, (bc)
+
+  ; check if null
+  cp 0
+  ret nz
+
+  call impl_sys_print_char 
+  inc bc
+  jp impl_sys_print_str
+
+impl_sys_print_foo:
   ret
