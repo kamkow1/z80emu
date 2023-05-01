@@ -20,3 +20,8 @@ def handler_inc_r16(self, opcode):
         high = full >> 8
         self.registers[rh[1]].value = high
         self.registers[rl[1]].value = low
+
+def handler_inc_r8(self, opcode):
+    reg = (opcode >> 3) & 7
+    reg = self.bin_to_str_regs[reg]
+    self.registers[reg].value += 1

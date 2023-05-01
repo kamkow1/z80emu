@@ -11,10 +11,14 @@ class VM:
     )
 
     from ._nop import handler_nop
-    from ._cp import handler_cp_n
     from ._halt import handler_halt
+    from ._cp import (
+        handler_cp_n,
+        handler_cp_r8
+    )
     from ._arthm import (
-        handler_inc_r16
+        handler_inc_r16,
+        handler_inc_r8
     )
     from ._jp import (
         handler_jp_n_n,
@@ -151,6 +155,13 @@ class VM:
                 0x03: self.handler_inc_r16,           # inc bc
                 0x13: self.handler_inc_r16,           # inc de
                 0x33: self.handler_inc_r16,           # inc sp
+                0x3C: self.handler_inc_r8,            # inc a
+                0x04: self.handler_inc_r8,            # inc b
+                0x0C: self.handler_inc_r8,            # inc c
+                0x14: self.handler_inc_r8,            # inc d
+                0x1C: self.handler_inc_r8,            # inc e
+                0x24: self.handler_inc_r8,            # inc h
+                0x2C: self.handler_inc_r8,            # inc l
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,           # jp n, n
@@ -200,6 +211,7 @@ class VM:
 
                 # -- Cp --
                 0xFE: self.handler_cp_n,             # cp n
+                0xB8: self.handler_cp_r8,            # cp b
 
                 # -- Halt --
                 0x76: self.handler_halt,            # halt
