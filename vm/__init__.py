@@ -211,7 +211,13 @@ class VM:
 
                 # -- Cp --
                 0xFE: self.handler_cp_n,             # cp n
+                0xBF: self.handler_cp_r8,            # cp a
                 0xB8: self.handler_cp_r8,            # cp b
+                0xB9: self.handler_cp_r8,            # cp c
+                0xBA: self.handler_cp_r8,            # cp d
+                0xBB: self.handler_cp_r8,            # cp e
+                0xBC: self.handler_cp_r8,            # cp h
+                0xBD: self.handler_cp_r8,            # cp l
 
                 # -- Halt --
                 0x76: self.handler_halt,            # halt

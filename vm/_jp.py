@@ -10,6 +10,7 @@ def jp_if(self, cond):
         perform_jp(self)
     else:
         self.increment_pc()
+        self.increment_pc()
 
 
 def handler_jp_n_n(self, opcode):

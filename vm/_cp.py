@@ -4,10 +4,9 @@ def cp_helper(self, value=None):
     a = self.registers["A"].value
     result = a - value
     self.registers["Z"].value = result == 0
-    self.increment_pc()
 
 def handler_cp_n(self, opcode):
-    cp_handler(self)
+    cp_helper(self)
 
 def handler_cp_r8(self, opcode):
     reg = opcode & 7

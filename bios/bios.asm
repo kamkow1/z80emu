@@ -12,9 +12,6 @@
   .db 0xC3
   .dw impl_sys_print_str
 
-  .db 0xC3
-  .dw impl_sys_print_foo
-
 
 impl_sys_print_char:
   ld (hl), a
@@ -26,7 +23,7 @@ impl_sys_print_str:
 
   ; check if null
   cp 0
-  ret nz
+  ret z
 
   call impl_sys_print_char 
   inc bc

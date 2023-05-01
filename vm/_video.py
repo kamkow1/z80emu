@@ -4,8 +4,8 @@ import sdl2, sdl2.ext
 
 sdl2.ext.init()
 
-WINDOW_WIDTH = 800
-WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 1600
+WINDOW_HEIGHT = 900
 WINDOW = sdl2.ext.Window("z80emu", size=(WINDOW_WIDTH, WINDOW_HEIGHT))
 WINDOW.show()
 RENDERER =  sdl2.ext.Renderer(WINDOW, flags=sdl2.SDL_RENDERER_SOFTWARE)
@@ -37,7 +37,10 @@ def video_update(self):
             ram_cell = self.ram[cell_addr]
             if ram_cell == 0:
                 ram_cell = 0x20
-            ascii_text += chr(ram_cell)
+            ram_cell = chr(ram_cell)
+            if ram_cell == "\n":
+                break
+            ascii_text += ram_cell
         ascii_text += "\n"
 
     if all(c == ascii_text[0] for c in ascii_text):
