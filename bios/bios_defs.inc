@@ -17,3 +17,6 @@ sys_print_char = sys_bios_begin
 ; notes:
 ; calls to `sys_print_char` under the hood
 sys_print_str = sys_print_char+bjt_item_len
+
+; clears the video buffer
+sys_video_clear = sys_print_str+bjt_item_len

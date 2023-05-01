@@ -43,7 +43,8 @@ class VM:
         handler_ld_n_n_a,
         handler_ld_a_from_hl_ptr,
         handler_ld_a_from_bc_ptr,
-        handler_ld_a_from_de_ptr
+        handler_ld_a_from_de_ptr,
+        handler_ld_r8_r8
     )
     from ._stack import (
         handler_call_n_n,
@@ -149,6 +150,7 @@ class VM:
                 0x12: self.handler_ld_de_a,          # ld (de), a
                 0x22: self.handler_ld_n_n_hl,        # ld (nn), hl
                 0x32: self.handler_ld_n_n_a,         # ld (nn), a
+                0x7B: self.handler_ld_r8_r8,         # ld a, e
 
                 # -- Inc --
                 0x23: self.handler_inc_r16,           # inc hl

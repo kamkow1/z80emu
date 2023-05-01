@@ -7,33 +7,29 @@
 _main:
     jp main
 
-info:
-    .az "printing a progress bar"
-
 main:
     ld sp, 1000
+
+    ld hl, sys_vb_begin 
+    ld b, 0
+    jp progbar_loop
+
+frame_loop:
+    ; new frame
+    ld b, 0
+    call sys_video_clear
     ld hl, sys_vb_begin 
 
-    ; init counter
-    ld d, 0
-
-    ld bc, info
-    call sys_print_str
-    ld a, 0xA ; \n
+progbar_loop:
+    ld a, '>'
     call sys_print_char
 
-loop:
-
-    ld a, '-'
-    call sys_print_char
-
-    ; assert c < 32
     ld a, 32
-    inc d
-    cp d
-    jp z, end
+    inc b
+    cp b
+    jp z, frame_loop
 
-    jp loop
+    jp progbar_loop
 
 end:
     halt
