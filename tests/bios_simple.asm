@@ -2,7 +2,7 @@
   .tf out.bin, BIN
   .lf out.lst
   .sf out.sym
-  .in bios/bios_defs.asm
+  .in bios/bios_defs.inc
 
 _main:
   jp main

@@ -1,7 +1,7 @@
   .cr Z80
   .tf bios.bin, BIN
   .lf bios.lst
-  .in bios/bios_defs.asm
+  .in bios/bios_defs.inc
   .or sys_bios_begin 
 
 ; bios jump table
