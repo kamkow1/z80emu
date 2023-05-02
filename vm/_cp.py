@@ -3,7 +3,11 @@ def cp_helper(self, value=None):
         value = self.ram[self.registers["PC"].value]
     a = self.registers["A"].value
     result = a - value
+
+    # set flags
+    self.registers["S"].value = result < 0
     self.registers["Z"].value = result == 0
+    self.registers["N"].value = True
 
 def handler_cp_n(self, opcode):
     cp_helper(self)
