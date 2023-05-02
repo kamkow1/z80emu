@@ -16,9 +16,8 @@ args = parser.parse_args()
 with open(sys.argv[1], "rb") as f:
     source = f.read()
     if args.debug:
-        with open(args.sym, "r") as syms:
-            dbg = debugger.Debugger(source, syms.read())
-            dbg.end_debugger()
+        dbg = debugger.Debugger(source, syms=args.sym != None)
+        dbg.end_debugger()
     else:
         v = vm.VM(source)
         v.run()
