@@ -12,14 +12,15 @@ main:
     ld b, 47
 
 loop:
+    ld hl, sys_vb_begin 
+    call sys_video_clear    
+
     ld a, 58
     inc b
     cp b
     jp z, end
 
     ld a, b
-    call sys_print_char
-    ld a, 0xA ; \n
     call sys_print_char
 
     jp loop
