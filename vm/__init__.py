@@ -18,7 +18,9 @@ class VM:
     )
     from ._arthm import (
         handler_inc_r16,
-        handler_inc_r8
+        handler_inc_r8,
+        handler_add_a_r8,
+        handler_add_a_n
     )
     from ._jp import (
         handler_jp_n_n,
@@ -212,6 +214,16 @@ class VM:
                 0x1C: self.handler_inc_r8,            # inc e
                 0x24: self.handler_inc_r8,            # inc h
                 0x2C: self.handler_inc_r8,            # inc l
+
+                # -- Add --
+                0xC6: self.handler_add_a_n,           # add a, n
+                0x87: self.handler_add_a_r8,          # add a, a
+                0x80: self.handler_add_a_r8,          # add a, b
+                0x81: self.handler_add_a_r8,          # add a, c
+                0x82: self.handler_add_a_r8,          # add a, d
+                0x83: self.handler_add_a_r8,          # add a, e
+                0x84: self.handler_add_a_r8,          # add a, h
+                0x85: self.handler_add_a_r8,          # add a, l
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,           # jp n, n

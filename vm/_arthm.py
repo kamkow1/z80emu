@@ -25,3 +25,27 @@ def handler_inc_r8(self, opcode):
     reg = (opcode >> 3) & 7
     reg = self.bin_to_str_regs[reg]
     self.registers[reg].value += 1
+
+
+def handler_add_a_r8(self, opcode):
+    reg = opcode & 4
+    reg = self.bin_to_str_regs[reg]
+
+    value = self.registers[reg].value
+    self.registers["A"].value += value
+
+    a = self.registers["A"].value
+
+    self.registers["S"].value = a < 0
+    self.registers["Z"].value = a == 0
+
+
+def handler_add_a_n(self, opcode):
+    value = self.ram[self.registers["PC"].value]
+    self.increment_pc()
+
+    self.registers["A"].value += value
+
+    a = self.registers["A"].value
+    self.registers["S"].value = a < 0
+    self.registers["Z"].value = a == 0
