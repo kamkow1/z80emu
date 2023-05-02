@@ -6,10 +6,9 @@ This project was made for educational purposes, so there are likely a lot of bug
 # Development Goals
 
 - [ ] Implement the core instruction set from [this site](https://clrhome.org/table)
-- [ ] Get C code running
-- [ ] Emulate video
+- [ ] Run C code
+- [x] Emulate video
 - [x] Debug mode that displays registers, memory and allows to step through instructions
-- [ ] Write a simple game
 
 # Resources
 
