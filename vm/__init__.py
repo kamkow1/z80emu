@@ -1,3 +1,6 @@
+import sys
+
+
 class Z80Register:
     def __init__(self, short_name, init_value):
         self.short_name = short_name
@@ -20,7 +23,8 @@ class VM:
         handler_inc_r16,
         handler_inc_r8,
         handler_add_a_r8,
-        handler_add_a_n
+        handler_add_a_n,
+        handler_add_hl_r16
     )
     from ._jp import (
         handler_jp_n_n,
@@ -224,6 +228,10 @@ class VM:
                 0x83: self.handler_add_a_r8,          # add a, e
                 0x84: self.handler_add_a_r8,          # add a, h
                 0x85: self.handler_add_a_r8,          # add a, l
+                0x09: self.handler_add_hl_r16,        # add hl, bc
+                0x19: self.handler_add_hl_r16,        # add hl, de
+                0x29: self.handler_add_hl_r16,        # add hl, hl
+                0x39: self.handler_add_hl_r16,        # add hl, sp
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,           # jp n, n
@@ -300,6 +308,7 @@ class VM:
 
         if self.opcode not in self.opcode_handlers:
             print(f"Error: encountered an unknown opcode `{hex(self.opcode)}`")
+            sys.exit(1)
         else:
             print(f"opcode {hex(self.opcode)}")
             self.opcode_handlers[self.opcode](self.opcode)

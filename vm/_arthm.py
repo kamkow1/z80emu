@@ -49,3 +49,27 @@ def handler_add_a_n(self, opcode):
     a = self.registers["A"].value
     self.registers["S"].value = a < 0
     self.registers["Z"].value = a == 0
+
+def handler_add_hl_r16(self, opcode):
+    regpair = (opcode >> 4) & 3
+    h = self.registers["H"].value
+    l = self.registers["L"].value
+    hl = h << 8 | l
+
+    if regpair == 3:
+        regpair = self.registers["SP"].value
+    else:
+        if regpair == 0:
+            regpair = "BC"
+        elif regpair == 1:
+            regpair = "DE"
+        elif regpair == 2:
+            regpair = "HL"
+
+        rh = self.registers[regpair[0]].value
+        rl = self.registers[regpair[1]].value
+        regpair = rh << 8 | rl
+
+    result = hl + regpair
+    self.registers["H"].value = result >> 8
+    self.registers["L"].value = result & 0xFF

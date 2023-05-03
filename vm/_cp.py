@@ -5,12 +5,15 @@ def cp_helper(self, value=None):
     result = a - value
 
     # set flags
-    self.registers["S"].value = result < 0
+    self.registers["S"].value = (result >> 7) & 1
     self.registers["Z"].value = result == 0
     self.registers["N"].value = True
+    self.registers["P/V"].value = result > 0xFF
+
 
 def handler_cp_n(self, opcode):
     cp_helper(self)
+
 
 def handler_cp_r8(self, opcode):
     reg = opcode & 7

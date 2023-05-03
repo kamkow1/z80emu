@@ -8,4 +8,6 @@ main:
   ld b, 34
   ld a, 35
   add a, b
-  add a, 351
+  add a, 10
+
+  halt
