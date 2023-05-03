@@ -24,7 +24,8 @@ class VM:
         handler_inc_r8,
         handler_add_a_r8,
         handler_add_a_n,
-        handler_add_hl_r16
+        handler_add_hl_r16,
+        handler_cpl
     )
     from ._jp import (
         handler_jp_n_n,
@@ -232,6 +233,9 @@ class VM:
                 0x19: self.handler_add_hl_r16,        # add hl, de
                 0x29: self.handler_add_hl_r16,        # add hl, hl
                 0x39: self.handler_add_hl_r16,        # add hl, sp
+
+                # -- Cpl --
+                0x2F: self.handler_cpl,               # cpl
 
                 # -- Jp --
                 0xC3: self.handler_jp_n_n,           # jp n, n

@@ -50,6 +50,7 @@ def handler_add_a_n(self, opcode):
     self.registers["S"].value = a < 0
     self.registers["Z"].value = a == 0
 
+
 def handler_add_hl_r16(self, opcode):
     regpair = (opcode >> 4) & 3
     h = self.registers["H"].value
@@ -73,3 +74,7 @@ def handler_add_hl_r16(self, opcode):
     result = hl + regpair
     self.registers["H"].value = result >> 8
     self.registers["L"].value = result & 0xFF
+
+
+def handler_cpl(self, opcode):
+    self.registers["A"].value = ~self.registers["A"].value
