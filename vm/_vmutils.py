@@ -6,7 +6,8 @@ def dump_registers(self, iter):
     print("-------------------------------------")
 
 def unsig_to_sig(x):
-    if x & 0x80 == 0x80:
-        return x - 256
-    else:
-        return x
+    return x - 256 if x & 0x80 == 0x80 else x
+
+
+def sig_to_unsig(x):
+    return x & 0xFFFF
