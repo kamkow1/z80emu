@@ -24,7 +24,17 @@ def handler_inc_r16(self, opcode):
 def handler_inc_r8(self, opcode):
     reg = (opcode >> 3) & 7
     reg = self.bin_to_str_regs[reg]
+
+    old_val = self.registers[reg].value
     self.registers[reg].value += 1
+    val = self.registers[reg].value
+
+    # set flags
+    # TODO: set H flag
+    self.registers["S"].value = val < 0
+    self.registers["Z"].value = val == 0
+    self.registers["N"].value = False
+    self.registers["P/V"].value = old_val == 0x7F
 
 
 def handler_add_a_r8(self, opcode):
