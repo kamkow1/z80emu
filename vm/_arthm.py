@@ -1,9 +1,3 @@
-from .carryutils import (
-    calc_carry8,
-    calc_carry16
-)
-
-
 def handler_inc_r16(self, opcode):
     reg = (opcode >> 4) & 3
     if reg == 3:
@@ -57,7 +51,7 @@ def handler_add_a_r8(self, opcode):
     # set flags
     self.flags["S"].value = a < 0
     self.flags["Z"].value = a == 0
-    self.flags["CY"].value = calc_carry8(new_a)
+    self.flags["CY"].value = self.calc_carry8(new_a)
 
 
 def handler_add_a_n(self, opcode):
@@ -102,7 +96,7 @@ def handler_add_hl_r16(self, opcode):
 
     # set flags
     self.flags["N"].value = False
-    self.flags["CY"].value = calc_carry16(result)
+    self.flags["CY"].value = self.calc_carry16(result)
 
 
 def handler_cpl(self, opcode):
