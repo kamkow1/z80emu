@@ -10,6 +10,12 @@ This project was made for educational purposes, so there are likely a lot of bug
 - [x] Debug mode that displays registers, memory and allows to step through instructions
 - [ ] Open architecture. [read more](https://en.wikipedia.org/wiki/Open_architecture)
 
+# Supported instructions
+The project most likely won't support all Z80 instructions.
+If you'd like to know which instructions this emulator supports specifically,
+see the file `__init__.py` in `vm/`. In the `VM` class constructor there are
+all the implemented instructions listed.
+
 # Resources
 
 - [instructions](https://clrhome.org/table)
