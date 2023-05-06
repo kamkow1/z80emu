@@ -15,14 +15,16 @@ class Debugger:
     from ._vm_status import vm_status
     from ._breakpoints_view import breakpoints_view
 
-    def __init__(self, source, syms):
-        self.render_syms = syms
+    def __init__(self, source, sym_path, render_syms):
+        self.render_syms = render_syms
         self.syms = {}
 
         if self.render_syms:
-            for line in syms.splitlines():
-               tokens = line.split()
-               self.syms[tokens[0]] = int(tokens[2].replace("$", ""), 16)
+            with open(sym_path, "r") as f:
+                string = f.read()
+                for line in string.splitlines():
+                    tokens = line.split()
+                    self.syms[tokens[0]] = int(tokens[2].replace("$", ""), 16)
 
         self.source = source
         self.vm = vm.VM(source)
