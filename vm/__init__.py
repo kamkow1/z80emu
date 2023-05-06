@@ -115,6 +115,7 @@ class VM:
                 "C": Z80Register("C", 0),
                 "D": Z80Register("D", 0),
                 "E": Z80Register("E", 0),
+                "F": Z80Register("F", 0),
                 "H": Z80Register("H", 0),
                 "L": Z80Register("L", 0),
                 "N": Z80Register("N", 0),

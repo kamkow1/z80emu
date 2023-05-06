@@ -12,7 +12,7 @@ def cp_helper(self, value=None):
     self.registers["Z"].value = result == 0
     self.registers["N"].value = True
     self.registers["P/V"].value = result > 0xFF
-    self.registers["C"].value = sig_to_unsig(a) - sig_to_unsig(value) > 0xFF
+    # self.registers["C"].value = sig_to_unsig(a) - sig_to_unsig(value) > 0xFF
 
 
 

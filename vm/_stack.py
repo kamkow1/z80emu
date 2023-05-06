@@ -76,6 +76,8 @@ def handler_pop_r16(self, opcode):
         pop_regpair_helper(self, "D", "E")
     elif reg == 2:
         pop_regpair_helper(self, "H", "L")
+    elif reg == 3:
+        pop_regpair_helper(self, "A", "F")
     else:
         print("Error: unhandled register in handler_pop_r16():",
               f"`{hex(reg)}`")
