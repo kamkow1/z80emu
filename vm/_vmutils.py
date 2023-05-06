@@ -11,3 +11,13 @@ def unsig_to_sig(x):
 
 def sig_to_unsig(x):
     return x & 0xFFFF
+
+
+def compose_F_register(self):
+    binstr = ""
+    for fname, fvalue in self.flags.items():
+        if fname[0] == "X":
+            # unused bit
+            continue
+        binstr += str(int(fvalue.value))
+    self.registers["F"].value = int(binstr, 2)

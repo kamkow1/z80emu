@@ -1,6 +1,3 @@
-from ._vmutils import sig_to_unsig
-
-
 def cp_helper(self, value=None):
     if value == None:
         value = self.ram[self.registers["PC"].value]
@@ -8,11 +5,10 @@ def cp_helper(self, value=None):
     result = a - value
 
     # set flags
-    self.registers["S"].value = (result >> 7) & 1
-    self.registers["Z"].value = result == 0
-    self.registers["N"].value = True
-    self.registers["P/V"].value = result > 0xFF
-    # self.registers["C"].value = sig_to_unsig(a) - sig_to_unsig(value) > 0xFF
+    self.flags["S"].value = (result >> 7) & 1
+    self.flags["Z"].value = result == 0
+    self.flags["N"].value = True
+    self.flags["P/V"].value = result > 0xFF
 
 
 

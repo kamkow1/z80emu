@@ -3,7 +3,7 @@
   .lf out.lst
   .sf out.sym
   .in bios/bios_defs.inc
-  in tests/conversions.inc
+  .in tests/conversions.inc
 
 
 main:

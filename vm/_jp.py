@@ -18,8 +18,8 @@ def handler_jp_n_n(self, opcode):
 
 
 def handler_jp_nz_n_n(self, opcode):
-    jp_if(self, not self.registers["Z"].value)
+    jp_if(self, not self.flags["Z"].value)
 
 
 def handler_jp_z_n_n(self, opcode):
-    jp_if(self, self.registers["Z"].value)
+    jp_if(self, self.flags["Z"].value)

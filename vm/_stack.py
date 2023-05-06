@@ -96,35 +96,35 @@ def handler_call_n_n(self, opcode):
 
 
 def handler_call_z_n_n(self, opcode):
-    call_if(self, self.registers["Z"].value)
+    call_if(self, self.flags["Z"].value)
 
 
 def handler_call_nz_n_n(self, opcode):
-    call_if(self, not self.registers["Z"].value)
+    call_if(self, not self.flags["Z"].value)
 
 
 def handler_call_nc_n_n(self, opcode):
-    call_if(self, not self.registers["C"].value)
+    call_if(self, not self.flags["CY"].value)
 
 
 def handler_call_c_n_n(self, opcode):
-    call_if(self, self.registers["C"].value)
+    call_if(self, self.flags["CY"].value)
 
 
 def handler_call_po_n_n(self, opcode):
-    call_if(self, not self.registers["P/V"].value)
+    call_if(self, not self.flags["P/V"].value)
 
 
 def handler_call_pe_n_n(self, opcode):
-    call_if(self, self.registers["P/V"].value)
+    call_if(self, self.flags["P/V"].value)
 
 
 def handler_call_p_n_n(self, opcode):
-    call_if(self, not self.registers["S"].value)
+    call_if(self, not self.flags["S"].value)
 
 
 def handler_call_m_n_n(self, opcode):
-    call_if(self, self.registers["S"].value)
+    call_if(self, self.flags["S"].value)
 
 
 def handler_ret(self, opcode):
@@ -132,39 +132,39 @@ def handler_ret(self, opcode):
 
 
 def handler_ret_z(self, opcode):
-    if self.registers["Z"].value:
+    if self.flags["Z"].value:
         ret_helper(self)
 
 
 def handler_ret_nz(self, opcode):
-    if not self.registers["Z"].value:
+    if not self.flags["Z"].value:
         ret_helper(self)
 
 
 def handler_ret_c(self, opcode):
-    if self.registers["C"].value:
+    if self.flags["CY"].value:
         ret_helper(self)
 
 def handler_ret_nc(self, opcode):
-    if not self.registers["C"].value:
+    if not self.flags["CY"].value:
         ret_helper(self)
 
 
 def handler_ret_pe(self, opcode):
-    if self.registers["P/V"].value:
+    if self.flags["P/V"].value:
         ret_helper(self)
 
 
 def handler_ret_po(self, opcode):
-    if not self.registers["P/V"].value:
+    if not self.flags["P/V"].value:
         ret_helper(self)
 
 
 def handler_ret_m(self, opcode):
-    if self.registers["S"].value:
+    if self.flags["S"].value:
         ret_helper(self)
 
 
 def handler_ret_p(self, opcode):
-    if not self.registers["S"].value:
+    if not self.flags["S"].value:
         ret_helper(self)

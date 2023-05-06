@@ -1,4 +1,4 @@
-from carryutils import (
+from .carryutils import (
     calc_carry8,
     calc_carry16
 )
@@ -38,10 +38,10 @@ def handler_inc_r8(self, opcode):
 
     # set flags
     # TODO: set H flag
-    self.registers["S"].value = val < 0
-    self.registers["Z"].value = val == 0
-    self.registers["N"].value = False
-    self.registers["P/V"].value = old_val == 0x7F
+    self.flags["S"].value = val < 0
+    self.flags["Z"].value = val == 0
+    self.flags["N"].value = False
+    self.flags["P/V"].value = old_val == 0x7F
 
 
 def handler_add_a_r8(self, opcode):
@@ -55,9 +55,9 @@ def handler_add_a_r8(self, opcode):
     a = self.registers["A"].value
 
     # set flags
-    self.registers["S"].value = a < 0
-    self.registers["Z"].value = a == 0
-    self.registers["C"].value = calc_carry8(new_a)
+    self.flags["S"].value = a < 0
+    self.flags["Z"].value = a == 0
+    self.flags["CY"].value = calc_carry8(new_a)
 
 
 def handler_add_a_n(self, opcode):
@@ -70,9 +70,9 @@ def handler_add_a_n(self, opcode):
 
     # set flags
     a = self.registers["A"].value
-    self.registers["S"].value = a < 0
-    self.registers["Z"].value = a == 0
-    self.registers["C"].value = new_a > 0xFF
+    self.flags["S"].value = a < 0
+    self.flags["Z"].value = a == 0
+    self.flags["CY"].value = new_a > 0xFF
 
 
 def handler_add_hl_r16(self, opcode):
@@ -101,8 +101,8 @@ def handler_add_hl_r16(self, opcode):
     self.registers["L"].value = masked_result & 0xFF
 
     # set flags
-    self.registers["N"].value = False
-    self.registers["C"].value = calc_carry16(result)
+    self.flags["N"].value = False
+    self.flags["CY"].value = calc_carry16(result)
 
 
 def handler_cpl(self, opcode):

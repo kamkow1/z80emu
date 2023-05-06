@@ -7,6 +7,13 @@ class Z80Register:
         self.value = init_value
 
 
+class Z80FlagBit:
+    def __init__(self, short_name, desc):
+        self.short_name = short_name
+        self.value = 0
+        self.desc = desc
+
+
 class VM:
     from ._video import (
         video_update,
@@ -75,7 +82,10 @@ class VM:
         handler_push_r16,
         handler_pop_r16
     )
-    from ._vmutils import dump_registers
+    from ._vmutils import (
+        dump_registers,
+        compose_F_register
+    )
 
     bin_to_str_regs = {
             0b111: "A",
@@ -109,6 +119,16 @@ class VM:
         # halt
         self.halt = False
 
+        # Xn is an unused flag bit for backwards compatilbility purposes
+        self.flags = {
+                "S": Z80FlagBit("S", "Sign flag. Set when the result of an operation was negative"),
+                "Z": Z80FlagBit("Z", "Zero flag. Set when an operation results in 0"),
+                "X1": Z80FlagBit("X", ""),
+                "N": Z80FlagBit("N", "Addition / Subtration flag. Set when the previous instruction was `SUB`"),
+                "X1": Z80FlagBit("X", ""),
+                "P/V": Z80FlagBit("P/V", "Parity / Overflow flag. Set when a number overflows"),
+                "CY": Z80FlagBit("CY", "Carry flag. Set depending whether an operation caused a carry or a borrow")}
+
         self.registers = {
                 "A": Z80Register("A", 0),
                 "B": Z80Register("B", 0),
@@ -118,9 +138,6 @@ class VM:
                 "F": Z80Register("F", 0),
                 "H": Z80Register("H", 0),
                 "L": Z80Register("L", 0),
-                "N": Z80Register("N", 0),
-                "S": Z80Register("S", 0),
-                "Z": Z80Register("Z", 0),
                 "P/V": Z80Register("P/V", 0),
                 "IX": Z80Register("IX", 0),
                 "IY": Z80Register("IY", 0),
@@ -308,7 +325,6 @@ class VM:
         if self.registers["PC"].value >= len(self.ram):
             return False
         self.opcode = self.ram[self.registers["PC"].value]
-
         self.increment_pc()
 
         if self.opcode not in self.opcode_handlers:
@@ -317,6 +333,7 @@ class VM:
         else:
             print(f"opcode {hex(self.opcode)}")
             self.opcode_handlers[self.opcode](self.opcode)
+            self.compose_F_register()
 
         return self.video_update()
 
