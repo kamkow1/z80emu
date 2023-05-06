@@ -11,9 +11,10 @@ from timeit import default_timer
 class Debugger:
     from ._ram_view import ram_view
     from ._window_menu_bar import window_menu_bar
-    from ._registers_table import registers_table
+    from ._registers_view import registers_view
     from ._vm_status import vm_status
     from ._breakpoints_view import breakpoints_view
+    from ._flags_view import flags_view
 
     def __init__(self, source, sym_path, render_syms):
         self.render_syms = render_syms
@@ -94,7 +95,8 @@ class Debugger:
         if imgui.begin("z80emu debugger"):
             self.window_menu_bar()
             self.vm_status()
-            self.registers_table()
+            self.registers_view()
+            self.flags_view()
             self.ram_view()
             self.breakpoints_view()
             imgui.end()

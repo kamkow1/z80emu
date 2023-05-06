@@ -1,6 +1,6 @@
 import imgui
 
-def registers_table(self):
+def registers_view(self):
     if imgui.begin("Registers View"):
         if imgui.begin_table("Registers", 2):
             for key, value in self.vm.registers.items():
