@@ -10,7 +10,7 @@ class Z80Register:
 class Z80FlagBit:
     def __init__(self, short_name, desc):
         self.short_name = short_name
-        self.value = 0
+        self.value = False
         self.desc = desc
 
 

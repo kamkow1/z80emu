@@ -100,7 +100,7 @@ def handler_add_hl_r16(self, opcode):
 
 
 def handler_cpl(self, opcode):
-    self.registers["A"].value = ~self.registers["A"].value
+    self.registers["A"].value = -1 * self.registers["A"].value - 1
 
 
 def handler_sub_r8(self, opcode):
