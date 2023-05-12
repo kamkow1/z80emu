@@ -2,9 +2,10 @@ import sys
 
 
 class Z80Register:
-    def __init__(self, short_name, init_value):
+    def __init__(self, short_name, width, init_value):
         self.short_name = short_name
         self.value = init_value
+        self.width = width
 
 
 class Z80FlagBit:
@@ -131,22 +132,20 @@ class VM:
                 "P/V": Z80FlagBit("P/V", "Parity / Overflow flag. Set when a number overflows"),
                 "CY": Z80FlagBit("CY", "Carry flag. Set depending whether an operation caused a carry or a borrow")}
 
+        # some registers (eg. index registers) were left off
+        # because the VM doesn't support the instructions
+        # which would require those registers to be implemented
         self.registers = {
-                "A": Z80Register("A", 0),
-                "B": Z80Register("B", 0),
-                "C": Z80Register("C", 0),
-                "D": Z80Register("D", 0),
-                "E": Z80Register("E", 0),
-                "F": Z80Register("F", 0),
-                "H": Z80Register("H", 0),
-                "L": Z80Register("L", 0),
-                "P/V": Z80Register("P/V", 0),
-                "IX": Z80Register("IX", 0),
-                "IY": Z80Register("IY", 0),
-                "I": Z80Register("I", 0),
-                "R": Z80Register("R", 0),
-                "SP": Z80Register("SP", 0),
-                "PC": Z80Register("PC", 0)}
+                "A": Z80Register("A", 8, 0),
+                "B": Z80Register("B", 8, 0),
+                "C": Z80Register("C", 8, 0),
+                "D": Z80Register("D", 8, 0),
+                "E": Z80Register("E", 8, 0),
+                "F": Z80Register("F", 8, 0),
+                "H": Z80Register("H", 8, 0),
+                "L": Z80Register("L", 8, 0),
+                "SP": Z80Register("SP", 16, 0),
+                "PC": Z80Register("PC", 16, 0)}
 
 
         self.opcode_handlers = {
