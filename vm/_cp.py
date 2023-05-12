@@ -5,7 +5,7 @@ def cp_helper(self, value=None):
     result = a - value
 
     # set flags
-    self.flags["S"].value = (result >> 7) & 1
+    self.flags["S"].value = bool((result >> 7) & 1)
     self.flags["Z"].value = result == 0
     self.flags["N"].value = True
     self.flags["P/V"].value = result > 0xFF
