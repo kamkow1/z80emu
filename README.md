@@ -71,3 +71,4 @@ python3 main.py out.bin # will just run the emulator
 # `out.sym` is required if you'd like to see some useful info about labels
 python3 main.py out.bin -debug -sym out.sym
 ```
+
