@@ -76,4 +76,4 @@ python3 main.py out.bin -debug -sym out.sym
 
 ## Memory
 
-<embed type="text/html" src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/Memory_Diagram.html" />
+<img src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/Memory_Diagram.html" />
