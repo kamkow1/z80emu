@@ -5,9 +5,9 @@ This project was made for educational purposes, so there are likely a lot of bug
 
 # Development Goals
 
-- [ ] Implement the core instruction set from [this site](https://clrhome.org/table)
-- [x] Emulate video
-- [x] Debug mode that displays registers, memory and allows to step through instructions
+- [x] (Done partially) Implement the core instruction set from [this site](https://clrhome.org/table)
+- [x] (vm/_video.py) Emulate video
+- [x] (debugger/) Debug mode that displays registers, memory and allows to step through instructions
 - [ ] Open architecture. [read more](https://en.wikipedia.org/wiki/Open_architecture)
 
 # Supported instructions
