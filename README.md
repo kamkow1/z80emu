@@ -72,3 +72,8 @@ python3 main.py out.bin # will just run the emulator
 python3 main.py out.bin -debug -sym out.sym
 ```
 
+# Architecture
+
+## Memory
+
+<embed type="text/html" src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/Memory_Diagram.html" />
