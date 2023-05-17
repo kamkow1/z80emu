@@ -33,7 +33,7 @@ def video_init_pic(self):
     RENDERER.present()
 
     WINDOW.refresh()
-    time.sleep(7)
+    time.sleep(3)
 
 
 def video_update(self):

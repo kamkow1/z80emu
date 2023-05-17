@@ -15,6 +15,7 @@ class Debugger:
     from ._vm_status import vm_status
     from ._breakpoints_view import breakpoints_view
     from ._flags_view import flags_view
+    from ._io_view import io_view
 
     def __init__(self, source, sym_path, render_syms):
         self.render_syms = render_syms
@@ -97,6 +98,7 @@ class Debugger:
             self.vm_status()
             self.registers_view()
             self.flags_view()
+            self.io_view()
             self.ram_view()
             self.breakpoints_view()
             imgui.end()
