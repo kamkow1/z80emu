@@ -132,3 +132,17 @@ def handler_sbc_a_r8(self, opcode):
     # set flags
     self.flags["S"].value = new_a < 0
     self.flags["Z"].value = new_a == 0
+
+def handler_and_r8(self, opcode):
+    reg = opcode & 7
+    reg = self.registers[reg].value
+    value = self.registers["A"].value & reg
+    self.registers["A"].value = value
+
+    # set flags
+    # NOTE: skip half-carry flag
+    self.flags["CY"].value = False
+    self.flags["N"].value = False
+    self.flags["P/V"].value = value > 0xFF
+    self.flags["Z"].value = value == 0
+    self.flags["S"].value = value < 0 
