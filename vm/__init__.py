@@ -36,7 +36,8 @@ class VM:
         handler_cpl,
         handler_sbc_a_r8,
         handler_sub_r8,
-        handler_and_r8
+        handler_and_r8,
+        handler_or_r8
     )
     from ._jp import (
         handler_jp_n_n,
@@ -279,6 +280,14 @@ class VM:
                 0xA3: self.handler_and_r8,            # and e
                 0xA4: self.handler_and_r8,            # and h
                 0xA5: self.handler_and_r8,            # and l
+
+                0xB7: self.handler_or_r8,             # or a
+                0xB0: self.handler_or_r8,             # or b
+                0xB1: self.handler_or_r8,             # or c
+                0xB2: self.handler_or_r8,             # or d
+                0xB3: self.handler_or_r8,             # or e
+                0xB4: self.handler_or_r8,             # or h
+                0xB5: self.handler_or_r8,             # or l
 
                 # -- Cpl --
                 0x2F: self.handler_cpl,               # cpl

@@ -145,4 +145,18 @@ def handler_and_r8(self, opcode):
     self.flags["N"].value = False
     self.flags["P/V"].value = value > 0xFF
     self.flags["Z"].value = value == 0
-    self.flags["S"].value = value < 0 
+    self.flags["S"].value = value < 0
+
+def handler_or_r8(self, opcode):
+    reg = opcode & 7
+    reg = self.registers[reg].value
+    value = self.registers["A"].value | reg
+    self.registers["A"].value = value
+
+    # set flags
+    # NOTE: skip hald-carry flag
+    self.flags["CY"].value = False
+    self.flags["N"].value = False
+    self.flags["P/V"].value = value > 0xFF
+    self.flags["Z"].value = value == 0
+    self.flags["S"].value = value < 0
