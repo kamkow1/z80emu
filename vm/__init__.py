@@ -24,6 +24,9 @@ class VM:
 
     from ._nop import handler_nop
     from ._halt import handler_halt
+    from ._io import (
+        handler_out_n_a
+    )
     from ._cp import (
         handler_cp_n,
         handler_cp_r8
@@ -110,6 +113,9 @@ class VM:
         self.ram = [0] * (0xFFFF + 1)
         for i, byte in enumerate(source):
             self.ram[i] = byte
+
+        # init io
+        self.io = [0] * 0x100
 
         # load BIOS
         with open("bios.bin", "rb") as bios_f:
@@ -351,6 +357,9 @@ class VM:
                 0xBB: self.handler_cp_r8,            # cp e
                 0xBC: self.handler_cp_r8,            # cp h
                 0xBD: self.handler_cp_r8,            # cp l
+
+                # -- Io --
+                0xD3: self.handler_out_n_a,          # out (n), a
 
                 # -- Halt --
                 0x76: self.handler_halt,            # halt
