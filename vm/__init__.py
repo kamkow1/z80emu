@@ -1,4 +1,5 @@
 import sys
+from threading import Thread, Lock
 
 
 class Z80Register:
@@ -116,6 +117,8 @@ class VM:
 
         # init io
         self.io = [0] * 0x100
+        # protect self.io so it can be shared between plugin theads
+        self.io_lock = Lock()
 
         # load BIOS
         with open("bios.bin", "rb") as bios_f:
