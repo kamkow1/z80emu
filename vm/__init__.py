@@ -24,7 +24,8 @@ class VM:
     from ._nop import handler_nop
     from ._halt import handler_halt
     from ._io import (
-        handler_out_n_a
+        handler_out_n_a,
+        handler_in_a_n
     )
     from ._cp import (
         handler_cp_n,
@@ -154,7 +155,6 @@ class VM:
                 "L": Z80Register("L", 8, 0),
                 "SP": Z80Register("SP", 16, 0),
                 "PC": Z80Register("PC", 16, 0)}
-
 
         self.opcode_handlers = {
                 # -- Ld --
@@ -356,6 +356,7 @@ class VM:
 
                 # -- Io --
                 0xD3: self.handler_out_n_a,          # out (n), a
+                0xDB: self.handler_in_a_n,           # in a, (n)
 
                 # -- Halt --
                 0x76: self.handler_halt,            # halt
