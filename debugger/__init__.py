@@ -17,7 +17,7 @@ class Debugger:
     from ._flags_view import flags_view
     from ._io_view import io_view
 
-    def __init__(self, source, sym_path, render_syms):
+    def __init__(self, source, sym_path, render_syms, vm_plugins):
         self.render_syms = render_syms
         self.syms = {}
 
@@ -29,7 +29,7 @@ class Debugger:
                     self.syms[tokens[0]] = int(tokens[2].replace("$", ""), 16)
 
         self.source = source
-        self.vm = vm.VM(source)
+        self.vm = vm.VM(source, vm_plugins)
         self.breakpoints = []
         self.vm_playing = False
         self.vm_suspended = False

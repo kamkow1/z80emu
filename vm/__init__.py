@@ -106,7 +106,7 @@ class VM:
             0b100: "H",
             0b101: "L"}
 
-    def __init__(self, source):
+    def __init__(self, source, plugins):
         self.source = source
         self.opcode = None
 
@@ -366,6 +366,17 @@ class VM:
 
                 # -- Nop --
                 0x0: self.handler_nop}              # nop
+
+                # Run plugins
+        for plugin in plugins:
+            plugin_f = plugin[0]
+        with open(plugin_f, "r") as f:
+            plugin_cnts = f.read()
+            lcs = locals()
+            exec(plugin_cnts, globals(), lcs)
+            # assume the user provided this function
+            plugin_main = lcs["plugin_main"]
+            plugin_main(vm=self)
 
     def increment_pc(self):
         self.registers["PC"].value += 1
