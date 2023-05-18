@@ -8,7 +8,11 @@ def io_view(self):
                 imgui.table_next_row()
                 for col in range(16):
                     imgui.table_set_column_index(col)
-                    imgui.text(str(hex(self.vm.io[port])))
+
+                    self.vm.io_lock.acquire()
+                    data = self.vm.io[port]
+                    imgui.text(str(hex(data)))
+                    self.vm.io_lock.release()
 
                     if imgui.is_item_hovered():
                         imgui.set_tooltip(str(hex(port)))
