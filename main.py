@@ -18,7 +18,7 @@ with open(sys.argv[1], "rb") as f:
     if args.debug:
         dbg = debugger.Debugger(
             source=source,
-            sym=args.sym,
+            sym_path=args.sym,
             render_syms=args.sym is not None,
             vm_plugins=args.plugin
         )
@@ -26,3 +26,4 @@ with open(sys.argv[1], "rb") as f:
     else:
         v = vm.VM(source, args.plugin)
         v.run()
+        v.end_vm()

@@ -94,7 +94,7 @@ class VM:
     )
     from ._vmutils import (
         dump_registers,
-        compose_F_register
+        compose_F_register,
     )
 
     bin_to_str_regs = {
@@ -367,7 +367,8 @@ class VM:
                 # -- Nop --
                 0x0: self.handler_nop}              # nop
 
-                # Run plugins
+        # Run plugins
+        self.plugin_threads = []
         for plugin in plugins:
             plugin_f = plugin[0]
         with open(plugin_f, "r") as f:
@@ -376,7 +377,20 @@ class VM:
             exec(plugin_cnts, globals(), lcs)
             # assume the user provided this function
             plugin_main = lcs["plugin_main"]
-            plugin_main(vm=self)
+            plugin_thread = Thread(
+                target=plugin_main,
+                args=(self,)
+            )
+            plugin_thread.start()
+            self.plugin_threads.append(plugin_thread)
+
+    def join_plugin_threads(self):
+        print("aaaa")
+        for pth in self.plugin_threads:
+            pth.join()
+
+    def end_vm(self):
+        self.join_plugin_threads()
 
     def increment_pc(self):
         self.registers["PC"].value += 1
@@ -392,7 +406,7 @@ class VM:
             print(f"Error: encountered an unknown opcode `{hex(self.opcode)}`")
             sys.exit(1)
         else:
-            print(f"opcode {hex(self.opcode)}")
+            #print(f"opcode {hex(self.opcode)}")
             self.opcode_handlers[self.opcode](self.opcode)
             self.compose_F_register()
 
