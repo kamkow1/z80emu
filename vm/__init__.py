@@ -18,8 +18,7 @@ class Z80FlagBit:
 class VM:
     from ._video import (
         video_update,
-        video_end,
-        video_init_pic
+        video_end
     )
 
     from ._nop import handler_nop
@@ -124,9 +123,6 @@ class VM:
                 if i >= len(bios):
                     break
                 self.ram[0xFA00 + i] = bios[i]
-
-        # video title screen
-        self.video_init_pic()
 
         # cycle counter
         self.tick = 0

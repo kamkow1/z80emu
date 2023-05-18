@@ -21,21 +21,6 @@ _font_path = os.path.join(
 FONT = sdl2.ext.FontTTF(_font_path, "16px", WHITE_RGBA)
 
 
-def video_init_pic(self):
-    ascii_text = ""
-    with open("assets/title_screen_ascii.txt", "r") as f:
-        ascii_text = f.read()
-
-    rendered_text = FONT.render_text(ascii_text, width=WINDOW_WIDTH)
-    texture = sdl2.ext.Texture(RENDERER, rendered_text)
-    RENDERER.clear(BLACK_RGBA)
-    RENDERER.copy(texture, dstrect=(10, 10))
-    RENDERER.present()
-
-    WINDOW.refresh()
-    time.sleep(3)
-
-
 def video_update(self):
     events = sdl2.ext.get_events()
     for event in events:
