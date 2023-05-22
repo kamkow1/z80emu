@@ -8,7 +8,7 @@ _main:
   jp main
 
 haha:
-    .az "ich liebe kasprzak und roman is ein bester Lehrer"
+    .az "giga fajny tekst wyswietlony w z80emu!"
 
 main:
     ld sp, 1000
