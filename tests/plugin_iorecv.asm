@@ -4,15 +4,8 @@
   .sf out.sym
   .in bios/bios_defs.inc
 
-_main:
-  jp main
-
-init_stack:
-  ld sp, 1000
-  ret
-
 main:
-  call init_stack
+  ld sp, 1000
   ; init video
   ld hl, sys_vb_begin
 
