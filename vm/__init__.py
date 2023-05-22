@@ -369,23 +369,23 @@ class VM:
 
         # Run plugins
         self.plugin_threads = []
-        for plugin in plugins:
-            plugin_f = plugin[0]
-        with open(plugin_f, "r") as f:
-            plugin_cnts = f.read()
-            lcs = locals()
-            exec(plugin_cnts, globals(), lcs)
-            # assume the user provided this function
-            plugin_main = lcs["plugin_main"]
-            plugin_thread = Thread(
-                target=plugin_main,
-                args=(self,)
-            )
-            plugin_thread.start()
-            self.plugin_threads.append(plugin_thread)
+        if plugins:
+            for plugin in plugins:
+                plugin_f = plugin[0]
+                with open(plugin_f, "r") as f:
+                    plugin_cnts = f.read()
+                    lcs = locals()
+                    exec(plugin_cnts, globals(), lcs)
+                    # assume the user provided this function
+                    plugin_main = lcs["plugin_main"]
+                    plugin_thread = Thread(
+                        target=plugin_main,
+                        args=(self,)
+                    )
+                    plugin_thread.start()
+                    self.plugin_threads.append(plugin_thread)
 
     def join_plugin_threads(self):
-        print("aaaa")
         for pth in self.plugin_threads:
             pth.join()
 
@@ -406,7 +406,7 @@ class VM:
             print(f"Error: encountered an unknown opcode `{hex(self.opcode)}`")
             sys.exit(1)
         else:
-            #print(f"opcode {hex(self.opcode)}")
+            print(f"opcode {hex(self.opcode)}")
             self.opcode_handlers[self.opcode](self.opcode)
             self.compose_F_register()
 
