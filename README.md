@@ -8,7 +8,7 @@ This project was made for educational purposes, so there are likely a lot of bug
 - [x] (Done partially) Implement the core instruction set from [this site](https://clrhome.org/table)
 - [x] (vm/_video.py) Emulate video
 - [x] (debugger/) Debug mode that displays registers, memory and allows to step through instructions
-- [ ] Open architecture. [read more](https://en.wikipedia.org/wiki/Open_architecture)
+- [x] Open architecture. [read more](https://en.wikipedia.org/wiki/Open_architecture)
 
 # Supported instructions
 The project most likely won't support all Z80 instructions.
