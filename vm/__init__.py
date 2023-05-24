@@ -1,18 +1,28 @@
 import sys
 from threading import Thread, Lock
 
+# the `short_name` field in Z80Register and Z80FlagBit classes
+# is for the debugger to display proper info
 
+# represents a single Z80 register
+# some registers are not implemented for simplicity
 class Z80Register:
     def __init__(self, short_name, width, init_value):
         self.short_name = short_name
         self.value = init_value
+        # width is used for nicely displaying all bits the the debugger
+        # since different regisers have different sizes
         self.width = width
 
 
+# represents a single Z80 flag bit 
+# some flags (eg. Half-Carry) are not implemented for simplicity
+# instances of this class are used to compose the `F` (flag) register
 class Z80FlagBit:
     def __init__(self, short_name, desc):
         self.short_name = short_name
         self.value = False
+        # the description is used to display extra info in the debugger
         self.desc = desc
 
 
@@ -162,6 +172,7 @@ class VM:
                 "SP": Z80Register("SP", 16, 0),
                 "PC": Z80Register("PC", 16, 0)}
 
+        # define instruction handlers
         self.opcode_handlers = {
                 # -- Ld --
                 0x3E: self.handler_ld_r8_n,          # ld a, n
@@ -388,16 +399,20 @@ class VM:
                     plugin_thread.start()
                     self.plugin_threads.append(plugin_thread)
 
+    # helper for joining plugin threads
     def join_plugin_threads(self):
         for pth in self.plugin_threads:
             pth.join()
 
+    # terminates the VM
     def end_vm(self):
         self.join_plugin_threads()
 
+    # increments the PC register
     def increment_pc(self):
         self.registers["PC"].value += 1
 
+    # executes exactly one instruction
     def step(self):
         self.tick += 1
         if self.registers["PC"].value >= len(self.ram):
@@ -415,6 +430,7 @@ class VM:
 
         return self.video_update()
 
+    # runs all the VM's steps unless the VM halts
     def run(self):
         _continue = True
         while _continue:
