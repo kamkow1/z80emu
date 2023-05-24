@@ -4,13 +4,18 @@ from ._vmutils import (
 )
 
 
+# increments a 16 bit register pair
+# SP is handled as a special case,
+# since it doesn't divide into lower and upper bits
 def handler_inc_r16(self, opcode):
     reg = (opcode >> 4) & 3
+    # hanlde SP
     if reg == 3:
         self.registers["SP"].value += 1
         return 
     rh = None
     rl = None
+    # Pick the right register pair
     if reg == 0:
         rh = (self.registers["B"].value, "B")
         rl = (self.registers["C"].value, "C")
@@ -20,6 +25,8 @@ def handler_inc_r16(self, opcode):
     elif reg == 2:
         rh = (self.registers["H"].value, "H")
         rl = (self.registers["L"].value, "L")
+
+    # decompose registers and save
     full = rh[0] << 8 | rl[0]
     full += 1
     low = full & 0xFF
@@ -28,6 +35,7 @@ def handler_inc_r16(self, opcode):
     self.registers[rl[1]].value = low
 
 
+# increments a single 8 bit register
 def handler_inc_r8(self, opcode):
     reg = (opcode >> 3) & 7
     reg = self.bin_to_str_regs[reg]
@@ -44,6 +52,7 @@ def handler_inc_r8(self, opcode):
     self.flags["P/V"].value = old_val == 0x7F
 
 
+# adds an 8 bit register to the A register
 def handler_add_a_r8(self, opcode):
     reg = opcode & 7
     reg = self.bin_to_str_regs[reg]
@@ -60,6 +69,7 @@ def handler_add_a_r8(self, opcode):
     self.flags["CY"].value = calc_carry8(new_a)
 
 
+# adds some value `n` to register A
 def handler_add_a_n(self, opcode):
     value = self.ram[self.registers["PC"].value]
     self.increment_pc()
@@ -75,6 +85,7 @@ def handler_add_a_n(self, opcode):
     self.flags["CY"].value = new_a > 0xFF
 
 
+# adds a 16 bit register pair to HL register pair
 def handler_add_hl_r16(self, opcode):
     regpair = (opcode >> 4) & 3
     h = self.registers["H"].value
@@ -105,10 +116,12 @@ def handler_add_hl_r16(self, opcode):
     self.flags["CY"].value = calc_carry16(result)
 
 
+# inverts the bits of A register
 def handler_cpl(self, opcode):
     self.registers["A"].value = -1 * self.registers["A"].value - 1
 
 
+# subtracts an8 bit register from A
 def handler_sub_r8(self, opcode):
     reg = opcode & 7
     reg = self.bin_to_str_regs[reg]
@@ -123,6 +136,8 @@ def handler_sub_r8(self, opcode):
     self.flags["CY"].value = new_a < 0
 
 
+# subtracts an 8 bit register from A,
+# but takes the carry flag into consideration
 def handler_sbc_a_r8(self, opcode):
     reg = opcode & 7
     reg = self.bin_to_str_regs[reg]
@@ -139,6 +154,7 @@ def handler_sbc_a_r8(self, opcode):
     self.flags["S"].value = new_a < 0
     self.flags["Z"].value = new_a == 0
 
+# performs a logical and on A
 def handler_and_r8(self, opcode):
     reg = opcode & 7
     reg = self.registers[reg].value
@@ -153,6 +169,8 @@ def handler_and_r8(self, opcode):
     self.flags["Z"].value = value == 0
     self.flags["S"].value = value < 0
 
+
+# performs logical or on A
 def handler_or_r8(self, opcode):
     reg = opcode & 7
     reg = self.registers[reg].value
