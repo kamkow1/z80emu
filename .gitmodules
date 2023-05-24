@@ -1,0 +1,3 @@
+[submodule "sbasm3"]
+	path = sbasm3
+	url = https://github.com/sbprojects/sbasm3.git
