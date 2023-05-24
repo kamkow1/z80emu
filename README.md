@@ -84,9 +84,55 @@ python3 main.py out.bin -debug -sym out.sym
 
 # Architecture
 
-## Memory
+## Memory overview
 
 <img src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/Memory_Diagram.png" />
+
+## BIOS overview
+
+BIOS subroutines are implemented using a BJT (BIOS Jump Table).
+The BIOS begins at address `0xFA00` (sys_bios_begin). All subroutines are spead apart by 3 bytes (bjt_item_len).
+`bios/bios_defs.inc` contains labeled addresses which redirect to BIOS subroutine implementations.
+
+### Extending the BIOS
+
+Here's a brief example of how to extend the functionality of z80emu's BIOS:
+
+`bios/bios_defs.inc` is a "header file" for our assembler - sbasm3. It contains named definitions
+of addresses which the user program can jump to.
+
+Here's an example subroutine:
+```asm
+; ...
+bjt_item_len = 3
+; ...
+
+; create a new label
+; we add the new subroutine in a relative position to the previous one
+; and then we pad it with `bjt_item_len`
+; NOTE: this is an sbasm3 specific thing, but there can't be extra spaces
+; around the plus sign. Otherwise the assembler will complain
+my_new_bios_subroutine = previous_subroutine_name+bjt_item_len
+```
+
+Then indside of `bios/bios.asm`:
+
+in the bios jump table "section":
+
+```asm
+.db 0xC3 ; 0xC3 is the opcode for the `JP` insturction
+.dw impl_my_new_bios_subroutine ; redirect to the subroutine implementation
+
+; now we can implement our subroutine
+impl_my_new_bios_subroutine:
+  ; do something ..., for example
+  inc hl
+  ret ; return to the caller
+```
+
+Here's a diagram that visually describes what's happening when using a BIOS subroutine
+
+<img src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/BIOS_BJT_Diagram.png" />
 
 ## Plugins
 
