@@ -4,7 +4,7 @@ import sys
 import os
 import subprocess
 
-SBASM = "sbasm.py"
+SBASM = "sbasm/sbasm.py"
 BIOS = os.path.join(
     os.path.dirname(__file__),
     "bios",
