@@ -8,7 +8,7 @@ This project was made for educational purposes, so there are likely a lot of bug
 - [x] (Done partially) Implement the core instruction set from [this site](https://clrhome.org/table)
 - [x] (vm/_video.py) Emulate video
 - [x] (debugger/) Debug mode that displays registers, memory and allows to step through instructions
-- [x] Open architecture. [read more](https://en.wikipedia.org/wiki/Open_architecture)
+- [x] (plugins/) Open architecture. [read more](https://en.wikipedia.org/wiki/Open_architecture)
 
 # Supported instructions
 The project most likely won't support all Z80 instructions.
@@ -77,3 +77,49 @@ python3 main.py out.bin -debug -sym out.sym
 ## Memory
 
 <img src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/Memory_Diagram.png" />
+
+## Plugins
+
+<img src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/Memory_Diagram.png" />
+
+### How are the mouse and keyboard implemented ?
+
+### keyboard
+the keyboard is implemented using the `keyboard` python package.
+Because of the way plugins are implemented the user plugin can import z80emu's dependencies
+
+### mouse
+the `VM` class exposes a field `VM.mouse` which is a tuple of (x, y).
+then the field can be updated by a plugin using z80emu's pysdl2 dependency - `sdl2.ext.mouse.mouse_coords()`.
+
+
+### Example plugin
+
+See `plugins/` to check out some examples of z80emu plguins.
+here's the bare minimum that you need to get a plugin up and running
+
+```python
+# my_amazing_plugin.py
+
+def plugin_main(vm):
+  # the `vm` parameter is a reference/pointer to the `VM` object.
+  # you can use it to refer to z80emu and change it's state
+
+  # NOTE: `plugin_main()` is called ONCE, when the plugin thread is ran.
+  # this means, that if you'd like to emulate some sort of a device or
+  # something that runs continuously, then a `while True:` loop is required
+
+  while True:
+    # do some work ...
+    # z80emu's thread safety is implemented using thread locks
+    # the `VM` class exposes a field `VM.vm_lock` - an instance of `threading.Lock`
+
+    # here's an example of how to modify z80emu's state inside of a plugin
+    vm.vm_lock.acquire()
+
+    # we're going to use io ports as an example
+    vm.io[0xA] = 23
+
+    vm.vm_lock.release() # if not released, an error will be thrown
+
+```
