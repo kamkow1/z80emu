@@ -80,7 +80,7 @@ python3 main.py out.bin -debug -sym out.sym
 
 ## Plugins
 
-<img src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/Memory_Diagram.png" />
+<img src="https://raw.githubusercontent.com/kamkow1/z80emu/master/assets/Plugin_Diagram.png" />
 
 ### How are the mouse and keyboard implemented ?
 
