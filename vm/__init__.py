@@ -120,6 +120,9 @@ class VM:
         # protect self.io so it can be shared between plugin theads
         self.vm_lock = Lock()
 
+        # make mouse cursor available (for plugins to utilize)
+        self.mouse = (0, 0)
+
         # load BIOS
         with open("bios.bin", "rb") as bios_f:
             bios = bios_f.read()

@@ -5,8 +5,8 @@ import sdl2, sdl2.ext
 
 sdl2.ext.init()
 
-WINDOW_WIDTH = 1600
-WINDOW_HEIGHT = 900
+WINDOW_WIDTH = 400 
+WINDOW_HEIGHT = 360
 WINDOW = sdl2.ext.Window("z80emu", size=(WINDOW_WIDTH, WINDOW_HEIGHT))
 WINDOW.show()
 RENDERER =  sdl2.ext.Renderer(WINDOW, flags=sdl2.SDL_RENDERER_SOFTWARE)

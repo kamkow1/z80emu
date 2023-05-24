@@ -27,7 +27,6 @@ def call_helper(self):
     self.ram[self.registers["SP"].value] = pc_low
 
     addr = (addr_high << 8) | addr_low
-    print(f"addr = {hex(addr)}")
     self.registers["PC"].value = addr
 
 

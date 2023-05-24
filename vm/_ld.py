@@ -62,7 +62,6 @@ def handler_ld_a_from_hl_ptr(self, opcode):
 
 
 def handler_ld_a_from_bc_ptr(self, opcode):
-    print("ahahha")
     ld_r8_from_r16_ptr_helper(self, "A", "BC")
 
 
