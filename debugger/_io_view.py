@@ -9,10 +9,10 @@ def io_view(self):
                 for col in range(16):
                     imgui.table_set_column_index(col)
 
-                    self.vm.io_lock.acquire()
+                    self.vm.vm_lock.acquire()
                     data = self.vm.io[port]
                     imgui.text(str(hex(data)))
-                    self.vm.io_lock.release()
+                    self.vm.vm_lock.release()
 
                     if imgui.is_item_hovered():
                         imgui.set_tooltip(str(hex(port)))

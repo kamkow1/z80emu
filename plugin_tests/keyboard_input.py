@@ -16,6 +16,6 @@ def plugin_main(vm):
         char = ord(getch())
 
         print("Pressed key keycode:", char)
-        vm.io_lock.acquire()
+        vm.vm_lock.acquire()
         vm.io[0xA] = char
-        vm.io_lock.release()
+        vm.vm_lock.release()
