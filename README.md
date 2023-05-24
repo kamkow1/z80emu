@@ -29,6 +29,16 @@ Now you are able to compile some test programs
 
 # Setup
 
+1. clone or download zip
+```bash
+git clone https://github.com/kamkow1/z80emu.git
+```
+
+2. init submodules
+```bash
+git submodules init
+```
+
 ```bash
 # Create Virtualenv
 python3 -m venv venv
