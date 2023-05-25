@@ -7,3 +7,6 @@ venv
 __pycache__
 vm/__pycache__
 debugger/__pycache__
+*.spec
+build
+dist
