@@ -1,7 +1,6 @@
 def plugin_main(vm):
     import keyboard
     import string
-    import time
 
     def getch():
         alph = list(string.ascii_lowercase)
@@ -12,6 +11,7 @@ def plugin_main(vm):
             for n in range(10):
                 if keyboard.is_pressed(str(n)):
                     return str(n)
+
     while True:
         char = ord(getch())
 

@@ -44,6 +44,11 @@ def ld_indirect_addr_helper(self, pair, value, inc_pc):
     high_byte = self.registers[pair[0]].value
 
     full_addr = high_byte << 8 | low_byte
+
+    if full_addr >= len(self.ram):
+        print("CANNOT WRITE OUTSIDE OF RAM")
+        return
+
     self.ram[full_addr] = value
 
 

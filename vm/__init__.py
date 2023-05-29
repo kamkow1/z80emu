@@ -425,7 +425,7 @@ class VM:
             print(f"Error: encountered an unknown opcode `{hex(self.opcode)}`")
             sys.exit(1)
         else:
-            #print(f"opcode {hex(self.opcode)}")
+            print(f"opcode {hex(self.opcode)}")
             self.opcode_handlers[self.opcode](self.opcode)
             self.compose_F_register()
 
