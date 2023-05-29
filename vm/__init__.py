@@ -383,6 +383,7 @@ class VM:
 
         # Run plugins
         self.plugin_threads = []
+        self.plugins = plugins
         if plugins:
             for plugin in plugins:
                 plugin_f = plugin[0]

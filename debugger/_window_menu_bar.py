@@ -22,7 +22,7 @@ def window_menu_bar(self):
             self.vm_suspended = True
 
         if imgui.button("Reset"):
-            self.vm = vm.VM(self.source)
+            self.vm = vm.VM(self.source, self.vm.plugins)
             self.vm_playing = False
 
         if imgui.button("Next BP"):

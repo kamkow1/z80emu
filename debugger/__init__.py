@@ -26,6 +26,8 @@ class Debugger:
                 string = f.read()
                 for line in string.splitlines():
                     tokens = line.split()
+                    if len(tokens) < 3:
+                        continue
                     self.syms[tokens[0]] = int(tokens[2].replace("$", ""), 16)
 
         self.source = source
