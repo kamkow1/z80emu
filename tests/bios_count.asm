@@ -3,7 +3,6 @@
   .lf out.lst
   .sf out.sym
   .in bios/bios_defs.inc
-  .in tests/conversions.inc
 
 
 main:
@@ -11,23 +10,25 @@ main:
     ld hl, sys_vb_begin 
 
     ; counter: from ascii 0 - 1
-    ld b, 0
+    ld b, 0x30
 
 loop:
-    ld hl, sys_vb_begin 
-    ; call sys_video_clear    
-
-    ld a, 10
+    ld a, 0x3A
     inc b
     cp b
     jp z, end
 
-    ; ld a, b
-
+    ld a, b
     call sys_print_char
+	inc hl
+	ld a, 0xA
+	call sys_print_char
+	inc hl
 
     jp loop
 
 end:
-    halt
+	ld hl, sys_vb_begin
+	call sys_video_clear
+	jp main
 
