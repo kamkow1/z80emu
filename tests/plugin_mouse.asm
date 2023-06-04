@@ -9,7 +9,7 @@ _main:
   ld sp, 1000
   jp main
  
-x10:   .az "x = 10"
+x10:   .az "x = 100"
 
 loadx:
   ld bc, x10 
@@ -18,7 +18,7 @@ loadx:
 main:
 
   in a, (0xE)
-  ld b, 10 
+  ld b, 100 
   cp b
   call z, loadx
 
